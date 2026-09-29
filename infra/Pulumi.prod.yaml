@@ -1,0 +1,5 @@
+config:
+  aws:region: us-east-1
+  kgame-infra:domain: k8s-game.nphunter.gg
+  kgame-infra:zoneName: nphunter.gg
+  kgame-infra:bucketName: kgame-k8s-game

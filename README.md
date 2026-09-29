@@ -59,4 +59,29 @@ node test/g2-sim.test.js && node test/g4-reconciler.test.js
 测试会确认：OOM 关卡的初始配置拿 0 星、参考答案能拿 3 星；每个 Reconciler 关卡都有解，而且每个陷阱都会被判定出来；每个选择器关卡都存在正确答案。
 
 `node test/g1-timed.sim.js [起始间隔] [最终间隔] [最短运行] [运行浮动]` 用机器人玩家模拟"高峰时段"关，调难度时用。
+
+## 部署
+
+线上地址：https://k8s-game.nphunter.gg
+
+- **基础设施**：`infra/`（Pulumi TypeScript，stack `illidan53/kgame-infra/prod`），和 nphunter.gg 在同一个 AWS 账号（`nphunter-sso` profile，us-east-1）。做法与 global-network.nphunter.gg 相同：
+  - 私有 S3 桶 `kgame-k8s-game`，只能经 CloudFront OAC 读取；
+  - CloudFront 分发 `E4U3ZYIS50NY8`，使用托管的 CachingOptimized 和 SecurityHeaders 策略；
+  - ACM 证书用 DNS 验证；
+  - 只在 Route 53 的 `nphunter.gg` 托管区里添加本子域名的 A / AAAA 别名记录和证书验证记录。
+
+  ```bash
+  cd infra && npm ci && AWS_PROFILE=nphunter-sso pulumi up -s illidan53/kgame-infra/prod
+  ```
+
+- **发布**：`scripts/deploy.sh` 会依次执行：
+  1. 测试；
+  2. `scripts/build.mjs` 生成 `dist/`，JS / CSS 文件名带内容哈希，长缓存 immutable；`index.html` 每次重新验证；
+  3. 上传 S3，先传资源再传 `index.html`；
+  4. 让 CloudFront 失效，然后对线上地址做冒烟测试。
+
+  ```bash
+  aws sso login --profile nphunter-sso
+  ./scripts/deploy.sh
+  ```
 # kgame

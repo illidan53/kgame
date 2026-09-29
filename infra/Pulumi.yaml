@@ -1,0 +1,6 @@
+name: kgame-infra
+description: k8s-game.nphunter.gg 静态站点（S3 + CloudFront + ACM + Route 53）
+runtime:
+  name: nodejs
+  options:
+    packagemanager: npm
