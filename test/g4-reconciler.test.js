@@ -1,6 +1,6 @@
 // 在 Node 中加载浏览器脚本：只需要一个最小的 KG 桩
 const fs = require('fs'); const vm = require('vm'); const assert = require('assert');
-const KG = { h() {}, s() {}, register() {}, store: { get: () => 0, set() {} } };
+const KG = { h() {}, s() {}, register() {}, aliases: {}, store: { get: () => 0, set() {} } };
 const ctx = { window: { KG }, KG, console, performance: { now: () => 0 } };
 vm.createContext(ctx);
 vm.runInContext(fs.readFileSync(__dirname + '/../js/g4-operator.js', 'utf8'), ctx);

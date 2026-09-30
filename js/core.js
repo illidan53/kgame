@@ -346,75 +346,15 @@
     el.classList.add('shake');
   };
 
-  // ---------------------------------------------------------------- 路由 & 大厅
+  // ---------------------------------------------------------------- 路由
   KG.games = [];
   KG.register = (g) => KG.games.push(g);
+  // 改名或拆分后的旧游戏 id → (子路径) => 新的路由
+  KG.aliases = {};
 
   let cleanup = null;
 
-  function renderHub(app) {
-    document.title = 'Kube 游乐场';
-    const cards = KG.games.map((g) => {
-      const prog = g.progress ? g.progress() : null;
-      return h(
-        'a',
-        { class: 'hub-card', href: '#/' + g.id, style: { '--card-accent': g.color || 'var(--accent)' } },
-        h('div', { class: 'hc-top' }, h('span', { class: 'hc-icon' }, g.icon), prog ? h('span', { class: 'hc-prog' }, `★ ${prog.got}/${prog.total}`) : null),
-        h('h2', null, g.title),
-        h('p', { class: 'hc-tag' }, g.tagline),
-        g.modes
-          ? h(
-              'ul',
-              { class: 'hc-modes' },
-              g.modes.map((m) => h('li', null, h('span', null, m.icon), m.title))
-            )
-          : null,
-        h(
-          'div',
-          { class: 'hc-concepts' },
-          g.concepts.map((c) => h('span', { class: 'chip' }, c))
-        )
-      );
-    });
-    app.appendChild(
-      h(
-        'div',
-        { class: 'page hub' },
-        h(
-          'header',
-          { class: 'hero' },
-          h('div', { class: 'hero-logo', 'aria-hidden': 'true' }, '⎈'),
-          h('h1', null, 'Kube 游乐场'),
-          h('p', null, '用小游戏理解 Kubernetes：调度、资源、OOM、控制循环，以及 Operator。每个小游戏都对应真实的 K8s 行为，玩完看看 💡 知识点。')
-        ),
-        h('div', { class: 'hub-grid' }, cards),
-        h(
-          'footer',
-          { class: 'hub-foot' },
-          h('span', null, '进度保存在本地浏览器。'),
-          h(
-            'button',
-            {
-              class: 'btn ghost small',
-              onclick: () => {
-                if (!confirm('确定清空所有星星和进度？')) return;
-                try {
-                  Object.keys(localStorage)
-                    .filter((k) => k.startsWith('kg:'))
-                    .forEach((k) => localStorage.removeItem(k));
-                } catch (e) {
-                  /* ignore */
-                }
-                route();
-              },
-            },
-            '重置进度'
-          )
-        )
-      )
-    );
-  }
-
+  // 大厅（舵轮）由 hub.js 提供：KG.renderHub(app, 大类 id) 返回清理函数
   function route() {
     const app = document.getElementById('app');
     if (cleanup) {
@@ -426,15 +366,21 @@
       cleanup = null;
     }
     document.querySelectorAll('.modal-overlay').forEach((m) => m.remove());
-    KG.clear(app);
     const m = location.hash.match(/^#\/([\w-]+)(?:\/([\w-]+))?/);
+    const alias = m && KG.aliases[m[1]];
+    if (alias) {
+      location.replace('#/' + alias(m[2]));
+      return;
+    }
+    KG.clear(app);
     const game = m && KG.games.find((g) => g.id === m[1]);
     if (!game) {
-      renderHub(app);
+      cleanup = KG.renderHub(app, m && m[1] === 'c' ? m[2] : null) || null;
       window.scrollTo(0, 0);
       return;
     }
     document.title = game.title + ' · Kube 游乐场';
+    const cat = KG.categoryOf(game.id);
     const body = h('div', { class: 'game-body' });
     app.appendChild(
       h(
@@ -443,7 +389,7 @@
         h(
           'header',
           { class: 'topbar' },
-          h('a', { class: 'back', href: '#/' }, '← 大厅'),
+          h('a', { class: 'back', href: cat ? '#/c/' + cat.id : '#/' }, '← ' + (cat ? cat.title : '大厅')),
           h('div', { class: 'tb-title' }, h('span', { class: 'tb-icon' }, game.icon), h('span', null, game.title)),
           h('div', { class: 'tb-sub' }, game.tagline)
         ),

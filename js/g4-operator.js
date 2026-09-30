@@ -1121,9 +1121,9 @@
 
   // ================================================================ 入口
   const MODES = [
-    { id: 'anatomy', icon: '🔬', title: 'Operator 解剖', mount: mountAnatomy, stars: [] },
-    { id: 'reconciler', icon: '🧠', title: '我是 Reconciler', mount: mountReconciler, stars: REC_LEVELS.map((l) => 'rec-' + l.id) },
-    { id: 'match', icon: '🃏', title: '概念连连看', mount: mountMatch, stars: ROUNDS.map((_, k) => 'match-' + (k + 1)) },
+    { id: 'anatomy', icon: '🔬', title: 'Operator 解剖', mount: mountAnatomy, stars: [], tagline: '6 个场景动画：事件怎么从 API Server 流经 Informer、WorkQueue 到 Reconcile', concepts: ['Informer', 'WorkQueue', 'Reconcile', 'Predicate'] },
+    { id: 'reconciler', icon: '🧠', title: '我是 Reconciler', mount: mountReconciler, stars: REC_LEVELS.map((l) => 'rec-' + l.id), tagline: '用代码卡片拼出 Reconcile 函数，经受多次触发也不出错', concepts: ['幂等', 'level-triggered', 'Finalizer', 'Status 子资源'] },
+    { id: 'match', icon: '🃏', title: '概念连连看', mount: mountMatch, stars: ROUNDS.map((_, k) => 'match-' + (k + 1)), tagline: '三组共 24 个 Operator 概念配对', concepts: ['CRD / CR', 'ownerReferences', 'Webhook', 'Leader Election'] },
   ];
 
   KG.register({

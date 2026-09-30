@@ -12,14 +12,32 @@ python3 -m http.server 8765
 
 然后打开 <http://localhost:8765>。进度（星星）保存在浏览器 localStorage 里。
 
+## 大厅：舵轮
+
+Kubernetes 在希腊语里是"舵手"，logo 是 7 根辐条的舵轮。大厅就是这个舵轮：7 根辐条对应 K8s 的 7 个大类，转到正上方的大类被选中，它的游戏卡片在上方轮动。可以拖动舵轮、在舵轮上滚动滚轮、按 ← →，或者直接点把手。转舵时星空和海面会跟着横移，像船在转向。
+
+| 大类 | 地址 | 已上线 | 即将开放（占位） |
+|---|---|---|---|
+| 📦 容器 | `#/c/container` | OOM 求生记 | 探针急诊室、镜像拉取 |
+| 🧭 调度 | `#/c/scheduling` | 调度大师 | 亲和与拓扑分布、优先级与抢占 |
+| ⚙️ 工作负载 | `#/c/workloads` | 我是 ReplicaSet、滚动更新 | StatefulSet 有序启停、Job 与 CronJob |
+| 🌐 网络 | `#/c/networking` | 标签选择器 | 数据包之旅、NetworkPolicy 防火墙 |
+| 💾 存储 | `#/c/storage` | — | PVC 配对 |
+| 🔐 安全 | `#/c/security` | — | RBAC 门禁、SecurityContext 加固 |
+| 🤖 Operator | `#/c/operator` | Operator 解剖、我是 Reconciler、概念连连看 | — |
+
+大类和卡片的配置在 `js/hub.js` 的 `CATEGORIES` 里。新游戏放进已有的大类，不新增大类（舵轮只有 7 根辐条）。游戏页的返回链接会回到它所属的大类。
+
 ## 游戏一览
 
 | # | 小游戏 | 玩法 | 对应的 K8s 概念 |
 |---|---|---|---|
 | 1 | 🧩 **调度大师** | 你来当 kube-scheduler：把 Pending 的 Pod 放到节点上。节点条形图显示 capacity / 系统预留 / allocatable，悬停时预览放上去的效果，放不下时给出和真实调度器一样的失败原因。还能让"默认调度器"按 LeastAllocated 打分跑一遍做对比。 | capacity vs allocatable、requests 占座、CPU/内存双维装箱、资源搁浅、Taint/Toleration、nodeSelector、DaemonSet、Cluster Autoscaler |
 | 2 | 💥 **OOM 求生记** | 给每个 Pod 调 request / limit，然后模拟一整天（约 30 秒）。内存用量会随流量、泄漏、突发上涨，图表上实时标出 💥 OOMKilled、☠ 内核 OOM、⛔ 驱逐。 | request vs limit、QoS（Guaranteed / Burstable / BestEffort）、cgroup OOMKilled、CrashLoopBackOff 退避、kubelet 驱逐排序、内核 OOM Killer 与 oom_score_adj、CPU 权重与 CFS 节流 |
-| 3 | 🎛️ **控制平面三连** | ① 标签选择器：写 selector 精确圈中目标 Pod，执行后才揭晓结果；② 我是 ReplicaSet：60 秒内手动维持副本数，应对误删、扩缩容、节点宕机、驱逐、容器崩溃；③ 滚动更新：调 maxSurge / maxUnavailable / readinessProbe，看流量粒子在 Service 和 Pod 之间流动。 | Label / Selector（matchLabels、In、NotIn、Exists）、Service、NetworkPolicy、PDB、控制循环、level-triggered、节点故障与 Pod 驱逐、Deployment 滚动更新、readinessProbe、回滚 |
-| 4 | 🤖 **Operator 工坊** | ① 解剖图：6 个场景动画演示事件从 API Server 流经 Informer、WorkQueue 到 Reconcile 的全过程，点击组件看说明；② 我是 Reconciler：用代码卡片拼出 Reconcile 函数，同一段代码要经受多次触发；③ 概念连连看：24 个 Operator 概念配对。 | CRD / CR、Manager、Informer（Reflector / DeltaFIFO / Indexer）、EventHandler / Predicate、WorkQueue 去重与限速重试、Reconcile 返回值语义、幂等、level-triggered、ownerReferences 与 GC、Finalizer、Status 子资源 / observedGeneration、Admission Webhook、Leader Election、Resync |
+| 3 | 🏷️ **标签选择器** | 写 selector 精确圈中目标 Pod，执行后才揭晓结果。 | Label / Selector（matchLabels、In、NotIn、Exists）、Service、NetworkPolicy、PDB |
+| 4 | 🔁 **我是 ReplicaSet** | 60 秒内手动维持副本数，应对误删、扩缩容、节点宕机、驱逐、容器崩溃。 | 控制循环、level-triggered、节点故障与 Pod 驱逐 |
+| 5 | 🚀 **滚动更新** | 调 maxSurge / maxUnavailable / readinessProbe，看流量粒子在 Service 和 Pod 之间流动。 | Deployment 滚动更新、readinessProbe、回滚 |
+| 6 | 🤖 **Operator 工坊** | ① 解剖图：6 个场景动画演示事件从 API Server 流经 Informer、WorkQueue 到 Reconcile 的全过程，点击组件看说明；② 我是 Reconciler：用代码卡片拼出 Reconcile 函数，同一段代码要经受多次触发；③ 概念连连看：24 个 Operator 概念配对。 | CRD / CR、Manager、Informer（Reflector / DeltaFIFO / Indexer）、EventHandler / Predicate、WorkQueue 去重与限速重试、Reconcile 返回值语义、幂等、level-triggered、ownerReferences 与 GC、Finalizer、Status 子资源 / observedGeneration、Admission Webhook、Leader Election、Resync |
 
 ## 设计要点
 
@@ -40,23 +58,27 @@ python3 -m http.server 8765
 
 ```
 index.html            入口
-css/style.css         样式（跟随系统浅色 / 深色）
+css/style.css         游戏页样式（跟随系统浅色 / 深色）
+css/hub.css           大厅样式（始终是夜空）
 js/core.js            DOM 工具、路由、存档、弹窗等公共组件
-js/g1-scheduler.js    游戏 1
-js/g2-sim.js          游戏 2 的模拟内核（纯逻辑，可在 Node 中测试）
-js/g2-resources.js    游戏 2 界面
-js/g3-concepts.js     游戏 3（三个小游戏）
-js/g4-operator.js     游戏 4（三个小游戏）
-test/                 关卡平衡与解谜可解性测试
+js/hub.js             大厅：7 个大类、舵轮、卡片轮动
+js/g1-scheduler.js    调度大师
+js/g2-sim.js          OOM 求生记的模拟内核（纯逻辑，可在 Node 中测试）
+js/g2-resources.js    OOM 求生记界面
+js/g3-concepts.js     标签选择器、我是 ReplicaSet、滚动更新
+js/g4-operator.js     Operator 工坊（三个小游戏）
+test/                 关卡平衡、解谜可解性、大类配置测试
 ```
+
+标签选择器、我是 ReplicaSet、滚动更新原来是同一个游戏"控制平面三连"（id `concepts`）。拆开后星星仍然存在 `kg:stars:concepts:*` 下，老玩家的进度不丢；旧地址 `#/concepts/<模式>` 会自动转到新游戏。
 
 ## 测试
 
 ```bash
-node test/g2-sim.test.js && node test/g4-reconciler.test.js
+node test/g2-sim.test.js && node test/g4-reconciler.test.js && node test/hub.test.js
 ```
 
-测试会确认：OOM 关卡的初始配置拿 0 星、参考答案能拿 3 星；每个 Reconciler 关卡都有解，而且每个陷阱都会被判定出来；每个选择器关卡都存在正确答案。
+测试会确认：OOM 关卡的初始配置拿 0 星、参考答案能拿 3 星；每个 Reconciler 关卡都有解，而且每个陷阱都会被判定出来；每个选择器关卡都存在正确答案；大类正好 7 个，每个上线的游戏恰好出现在一个大类里，旧地址都能转到存在的游戏。
 
 `node test/g1-timed.sim.js [起始间隔] [最终间隔] [最短运行] [运行浮动]` 用机器人玩家模拟"高峰时段"关，调难度时用。
 

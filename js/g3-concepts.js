@@ -1,8 +1,9 @@
-/* 小游戏 3：控制平面三连 —— 标签选择器 / ReplicaSet 控制循环 / 滚动更新 */
+/* 标签选择器 / 我是 ReplicaSet / 滚动更新 —— 原"控制平面三连"拆出的三个游戏 */
 (function () {
   'use strict';
   const { h, s } = KG;
-  const GAME = 'concepts';
+  // 拆分前三个游戏同属 id 'concepts'，星星一直存在这个名下；继续沿用，老玩家的进度不丢
+  const SAVE = 'concepts';
 
   // ================================================================ 3a 标签选择器
   const SEL_PODS = [
@@ -187,7 +188,7 @@
         solved = true;
         const stars = attempts === 1 ? 3 : attempts === 2 ? 2 : 1;
         KG.showResult({
-          game: GAME,
+          game: SAVE,
           level: 'sel-' + lv.id,
           stars,
           goals: [
@@ -332,7 +333,7 @@
     }
 
     host.append(
-      KG.levelBar(GAME, SEL_LEVELS.map((l) => ({ ...l, id: 'sel-' + l.id })), li, load),
+      KG.levelBar(SAVE, SEL_LEVELS.map((l) => ({ ...l, id: 'sel-' + l.id })), li, load),
       h('section', { class: 'panel intro' }, h('h2', null, `第 ${li + 1} 关 · ${lv.title}`), h('p', { html: lv.task }), KG.goalBox(['选中的 Pod 与 🎯 目标完全一致', '两次以内答对', '一次答对'])),
       h('div', { class: 'g3s-layout' }, h('div', { class: 'panel' }, h('div', { class: 'panel-title' }, 'Pods（14 个）'), podsEl), h('div', { class: 'g3s-side' }, h('div', { class: 'panel' }, builderEl, statusEl), h('div', { class: 'panel' }, h('div', { class: 'panel-title' }, lv.kind === 'kubectl' ? '命令' : 'YAML'), yamlEl)))
     );
@@ -558,7 +559,7 @@
       }
       const stars = rate >= 0.85 ? 3 : rate >= 0.7 ? 2 : rate >= 0.5 ? 1 : 0;
       KG.showResult({
-        game: GAME,
+        game: SAVE,
         level: 'ctrl',
         stars,
         goals: [
@@ -915,7 +916,7 @@
       }
       const stars = g[0].ok ? 1 + (g[1].ok ? 1 : 0) + (g[2].ok ? 1 : 0) : 0;
       KG.showResult({
-        game: GAME,
+        game: SAVE,
         level: 'ro-' + lv.id,
         stars,
         goals: g,
@@ -1200,7 +1201,7 @@
     sc.add(() => mq.removeEventListener('change', onScheme));
 
     host.append(
-      KG.levelBar(GAME, RO_LEVELS.map((l) => ({ ...l, id: 'ro-' + l.id })), li, load),
+      KG.levelBar(SAVE, RO_LEVELS.map((l) => ({ ...l, id: 'ro-' + l.id })), li, load),
       h('section', { class: 'panel intro' }, h('h2', null, `第 ${li + 1} 关 · ${lv.title}`), h('p', { html: lv.intro }), KG.goalBox(lv.goals), KG.tip('RollingUpdate 是怎么推进的', 'Deployment 控制器每次同步：<br>① 先扩新 ReplicaSet：总 Pod 数不超过 <code>replicas + maxSurge</code>；<br>② 再缩旧 ReplicaSet：可用 Pod 数不低于 <code>replicas − maxUnavailable</code>。<br>这里的"可用"就是 <b>Ready</b>，而 Ready 由 <b>readinessProbe</b> 决定。Service 也只把流量转发给 Ready 的 Pod（EndpointSlice）。所以 readinessProbe 同时是<b>流量闸门</b>和<b>发布闸门</b>。')),
       h('div', { class: 'g3r-layout' }, h('div', { class: 'panel' }, h('div', { class: 'panel-title' }, '发布策略'), cfgEl, h('details', { class: 'tip', style: { marginTop: '10px' } }, h('summary', null, 'Deployment YAML'), yamlEl)), h('div', { class: 'panel g3r-stage' }, statsEl, canvas, statusLine, h('div', { class: 'panel-title', style: { marginTop: '8px', marginBottom: '4px' } }, '每秒失败率'), sparkEl)),
       log.root
@@ -1209,31 +1210,43 @@
   }
 
   // ================================================================ 入口
-  const MODES = [
-    { id: 'selector', icon: '🏷️', title: '标签选择器', mount: mountSelector, stars: SEL_LEVELS.map((l) => 'sel-' + l.id) },
-    { id: 'controller', icon: '🔁', title: '我是 ReplicaSet', mount: mountController, stars: ['ctrl'] },
-    { id: 'rollout', icon: '🚀', title: '滚动更新', mount: mountRollout, stars: RO_LEVELS.map((l) => 'ro-' + l.id) },
-  ];
+  const stars = (ids) => () => ({ got: ids.reduce((a, id) => a + KG.getStars(SAVE, id), 0), total: ids.length * 3 });
 
   KG.register({
-    id: GAME,
-    icon: '🎛️',
-    color: '#34d399',
-    title: '控制平面三连',
-    tagline: '标签选择器、控制循环、滚动更新',
-    modes: MODES,
-    concepts: ['Label / Selector', 'Service', 'ReplicaSet', '控制循环', '节点故障', 'Deployment', 'readinessProbe', 'maxSurge / maxUnavailable', '回滚'],
-    progress: () => {
-      const ids = MODES.flatMap((m) => m.stars);
-      return { got: ids.reduce((a, id) => a + KG.getStars(GAME, id), 0), total: ids.length * 3 };
-    },
-    mount(body, sub) {
-      const mode = MODES.find((m) => m.id === sub) || MODES[0];
-      const host = h('div');
-      body.append(KG.modeTabs(GAME, MODES, mode.id), host);
-      return mode.mount(host);
-    },
+    id: 'selector',
+    icon: '🏷️',
+    color: '#22d3ee',
+    title: '标签选择器',
+    tagline: '写 selector 精确圈中目标 Pod，执行后才揭晓结果',
+    concepts: ['Label / Selector', 'matchLabels', 'In / NotIn / Exists', 'Service', 'NetworkPolicy', 'PDB'],
+    progress: stars(SEL_LEVELS.map((l) => 'sel-' + l.id)),
+    mount: (body) => mountSelector(body),
   });
+
+  KG.register({
+    id: 'replicaset',
+    icon: '🔁',
+    color: '#34d399',
+    title: '我是 ReplicaSet',
+    tagline: '60 秒内手动维持副本数：误删、扩缩容、节点宕机、驱逐',
+    concepts: ['ReplicaSet', '控制循环', 'level-triggered', '节点故障', 'Pod 驱逐'],
+    progress: stars(['ctrl']),
+    mount: (body) => mountController(body),
+  });
+
+  KG.register({
+    id: 'rollout',
+    icon: '🚀',
+    color: '#34d399',
+    title: '滚动更新',
+    tagline: '调 maxSurge / maxUnavailable / readinessProbe，看流量在新旧 Pod 间流动',
+    concepts: ['Deployment', 'maxSurge / maxUnavailable', 'readinessProbe', '回滚'],
+    progress: stars(RO_LEVELS.map((l) => 'ro-' + l.id)),
+    mount: (body) => mountRollout(body),
+  });
+
+  // 旧地址 #/concepts/<模式> 转到拆分后的游戏
+  KG.aliases.concepts = (sub) => ({ controller: 'replicaset', rollout: 'rollout' })[sub] || 'selector';
 
   KG._g3 = { SEL_PODS, SEL_LEVELS, matchTerm };
 })();

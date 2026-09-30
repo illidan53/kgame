@@ -162,7 +162,7 @@ button {
   line-height: 1.7;
 }
 
-/* ================================================================ 顶栏 / 大厅 */
+/* ================================================================ 顶栏 */
 .topbar {
   display: flex;
   align-items: center;
@@ -192,114 +192,6 @@ button {
 .tb-sub {
   color: var(--muted);
   font-size: 0.9rem;
-}
-
-.hero {
-  text-align: center;
-  padding: 36px 8px 24px;
-}
-.hero-logo {
-  font-size: 3.2rem;
-  line-height: 1;
-  color: var(--accent);
-  margin-bottom: 6px;
-}
-.hero h1 {
-  font-size: 2.1rem;
-  letter-spacing: 0.02em;
-}
-.hero p {
-  color: var(--muted);
-  max-width: 620px;
-  margin: 8px auto 0;
-}
-.hub-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 16px;
-}
-.hub-card {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 18px;
-  color: var(--text);
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
-}
-.hub-card::before {
-  content: '';
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 4px;
-  background: var(--card-accent);
-}
-.hub-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--card-accent);
-  box-shadow: var(--shadow);
-}
-.hub-card h2 {
-  margin: 0;
-}
-.hc-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.hc-icon {
-  font-size: 2rem;
-}
-.hc-prog {
-  font-size: 0.82rem;
-  color: var(--warn);
-  font-weight: 600;
-}
-.hc-tag {
-  color: var(--muted);
-  margin: 0;
-  font-size: 0.92rem;
-}
-.hc-modes {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 0.9rem;
-}
-.hc-modes li span {
-  display: inline-block;
-  width: 1.6em;
-}
-.hc-concepts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-top: auto;
-  padding-top: 6px;
-}
-.chip {
-  font-size: 0.75rem;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--panel2);
-  border: 1px solid var(--border);
-  color: var(--muted);
-}
-.hub-foot {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 12px;
-  margin-top: 28px;
-  color: var(--muted);
-  font-size: 0.85rem;
 }
 
 /* ================================================================ 按钮 / 徽章 */
