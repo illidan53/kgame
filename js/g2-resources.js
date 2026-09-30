@@ -530,6 +530,11 @@
     title: 'OOM 求生记',
     tagline: '调 request / limit，让服务撑过一整天',
     concepts: ['request vs limit', 'QoS 等级', 'OOMKilled', 'CrashLoopBackOff', 'kubelet 驱逐', '内核 OOM Killer', 'CPU 节流'],
+    en: {
+      title: 'OOM Survival',
+      tagline: 'Tune requests and limits so your service survives a whole day',
+      concepts: ['request vs limit', 'QoS classes', 'OOMKilled', 'CrashLoopBackOff', 'kubelet eviction', 'kernel OOM killer', 'CPU throttling'],
+    },
     progress: () => ({ got: LEVELS.reduce((a, l) => a + KG.getStars(GAME, l.id), 0), total: LEVELS.length * 3 }),
     mount,
   });

@@ -1219,6 +1219,7 @@
     title: '标签选择器',
     tagline: '写 selector 精确圈中目标 Pod，执行后才揭晓结果',
     concepts: ['Label / Selector', 'matchLabels', 'In / NotIn / Exists', 'Service', 'NetworkPolicy', 'PDB'],
+    en: { title: 'Label Selectors', tagline: 'Write a selector that picks exactly the target Pods; the result shows when you run it' },
     progress: stars(SEL_LEVELS.map((l) => 'sel-' + l.id)),
     mount: (body) => mountSelector(body),
   });
@@ -1230,6 +1231,7 @@
     title: '我是 ReplicaSet',
     tagline: '60 秒内手动维持副本数：误删、扩缩容、节点宕机、驱逐',
     concepts: ['ReplicaSet', '控制循环', 'level-triggered', '节点故障', 'Pod 驱逐'],
+    en: { title: 'I Am a ReplicaSet', tagline: 'Hold the replica count by hand for 60 s through deletes, scaling and node failures', concepts: ['ReplicaSet', 'control loop', 'level-triggered', 'node failure', 'Pod eviction'] },
     progress: stars(['ctrl']),
     mount: (body) => mountController(body),
   });
@@ -1241,6 +1243,7 @@
     title: '滚动更新',
     tagline: '调 maxSurge / maxUnavailable / readinessProbe，看流量在新旧 Pod 间流动',
     concepts: ['Deployment', 'maxSurge / maxUnavailable', 'readinessProbe', '回滚'],
+    en: { title: 'Rolling Update', tagline: 'Tune maxSurge, maxUnavailable and readinessProbe; watch traffic shift to new Pods', concepts: ['Deployment', 'maxSurge / maxUnavailable', 'readinessProbe', 'rollback'] },
     progress: stars(RO_LEVELS.map((l) => 'ro-' + l.id)),
     mount: (body) => mountRollout(body),
   });

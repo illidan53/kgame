@@ -119,6 +119,36 @@
   };
   KG.store = store;
   KG.getStars = (game, level) => store.get(`stars:${game}:${level}`, 0);
+
+  // ---------------------------------------------------------------- 语言
+  // 中文 / English，选择存在本地。链接里的 ?lang=en 优先，方便从英文页面跳过来。
+  // 目前翻译了大厅和各游戏的标题、简介；游戏内的关卡文字仍是中文。
+  KG.lang = (() => {
+    const q = new URLSearchParams(location.search).get('lang');
+    if (q === 'zh' || q === 'en') {
+      store.set('lang', q);
+      return q;
+    }
+    return store.get('lang', 'zh') === 'en' ? 'en' : 'zh';
+  })();
+  KG.t = (zh, en) => (KG.lang === 'en' ? en : zh);
+  // 对象上的文案：英文模式优先取 obj.en[key]，没有就用中文
+  KG.loc = (obj, key) => (KG.lang === 'en' && obj.en && obj.en[key] != null ? obj.en[key] : obj[key]);
+  KG.siteTitle = () => KG.t('Kube 游乐场', 'Kube Playground');
+
+  function applyLang() {
+    document.documentElement.lang = KG.t('zh-CN', 'en');
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.content = KG.t('用小游戏理解 Kubernetes：容器、调度、工作负载、网络、存储、安全、Operator。', 'Learn Kubernetes through mini-games: containers, scheduling, workloads, networking, storage, security and Operators.');
+  }
+  applyLang();
+  KG.setLang = (lang) => {
+    if (lang !== 'zh' && lang !== 'en') return;
+    KG.lang = lang;
+    store.set('lang', lang);
+    applyLang();
+    route();
+  };
   KG.setStars = (game, level, n) => {
     if (n > KG.getStars(game, level)) store.set(`stars:${game}:${level}`, n);
   };
@@ -284,7 +314,7 @@
           'a',
           { class: 'mode-tab' + (m.id === currentId ? ' active' : ''), href: `#/${gameId}/${m.id}` },
           h('span', { class: 'mt-icon' }, m.icon),
-          h('span', null, m.title)
+          h('span', null, KG.loc(m, 'title'))
         )
       )
     );
@@ -379,7 +409,7 @@
       window.scrollTo(0, 0);
       return;
     }
-    document.title = game.title + ' · Kube 游乐场';
+    document.title = KG.loc(game, 'title') + ' · ' + KG.siteTitle();
     const cat = KG.categoryOf(game.id);
     const body = h('div', { class: 'game-body' });
     app.appendChild(
@@ -389,9 +419,9 @@
         h(
           'header',
           { class: 'topbar' },
-          h('a', { class: 'back', href: cat ? '#/c/' + cat.id : '#/' }, '← ' + (cat ? cat.title : '大厅')),
-          h('div', { class: 'tb-title' }, h('span', { class: 'tb-icon' }, game.icon), h('span', null, game.title)),
-          h('div', { class: 'tb-sub' }, game.tagline)
+          h('a', { class: 'back', href: cat ? '#/c/' + cat.id : '#/' }, '← ' + (cat ? KG.loc(cat, 'title') : KG.t('大厅', 'Lobby'))),
+          h('div', { class: 'tb-title' }, h('span', { class: 'tb-icon' }, game.icon), h('span', null, KG.loc(game, 'title'))),
+          h('div', { class: 'tb-sub' }, KG.loc(game, 'tagline'))
         ),
         body
       )

@@ -1121,9 +1121,9 @@
 
   // ================================================================ 入口
   const MODES = [
-    { id: 'anatomy', icon: '🔬', title: 'Operator 解剖', mount: mountAnatomy, stars: [], tagline: '6 个场景动画：事件怎么从 API Server 流经 Informer、WorkQueue 到 Reconcile', concepts: ['Informer', 'WorkQueue', 'Reconcile', 'Predicate'] },
-    { id: 'reconciler', icon: '🧠', title: '我是 Reconciler', mount: mountReconciler, stars: REC_LEVELS.map((l) => 'rec-' + l.id), tagline: '用代码卡片拼出 Reconcile 函数，经受多次触发也不出错', concepts: ['幂等', 'level-triggered', 'Finalizer', 'Status 子资源'] },
-    { id: 'match', icon: '🃏', title: '概念连连看', mount: mountMatch, stars: ROUNDS.map((_, k) => 'match-' + (k + 1)), tagline: '三组共 24 个 Operator 概念配对', concepts: ['CRD / CR', 'ownerReferences', 'Webhook', 'Leader Election'] },
+    { id: 'anatomy', icon: '🔬', title: 'Operator 解剖', mount: mountAnatomy, stars: [], tagline: '6 个场景动画：事件怎么从 API Server 流经 Informer、WorkQueue 到 Reconcile', concepts: ['Informer', 'WorkQueue', 'Reconcile', 'Predicate'], en: { title: 'Operator Anatomy', tagline: "Six animated scenes: an event's trip from the API server to Reconcile" } },
+    { id: 'reconciler', icon: '🧠', title: '我是 Reconciler', mount: mountReconciler, stars: REC_LEVELS.map((l) => 'rec-' + l.id), tagline: '用代码卡片拼出 Reconcile 函数，经受多次触发也不出错', concepts: ['幂等', 'level-triggered', 'Finalizer', 'Status 子资源'], en: { title: 'I Am the Reconciler', tagline: 'Build Reconcile from code cards so it holds up when triggered again and again', concepts: ['idempotency', 'level-triggered', 'Finalizer', 'Status subresource'] } },
+    { id: 'match', icon: '🃏', title: '概念连连看', mount: mountMatch, stars: ROUNDS.map((_, k) => 'match-' + (k + 1)), tagline: '三组共 24 个 Operator 概念配对', concepts: ['CRD / CR', 'ownerReferences', 'Webhook', 'Leader Election'], en: { title: 'Concept Match', tagline: 'Match 24 Operator concepts in three rounds' } },
   ];
 
   KG.register({
@@ -1134,6 +1134,11 @@
     tagline: '拆开 Operator 看事件怎么流动，再亲手写一个 Reconcile',
     modes: MODES,
     concepts: ['CRD / CR', 'Informer', 'WorkQueue', 'Reconcile', 'level-triggered', '幂等', 'ownerReferences', 'Finalizer', 'Status 子资源', 'Webhook', 'Leader Election'],
+    en: {
+      title: 'Operator Workshop',
+      tagline: 'Take an Operator apart to see how events flow, then write a Reconcile yourself',
+      concepts: ['CRD / CR', 'Informer', 'WorkQueue', 'Reconcile', 'level-triggered', 'idempotency', 'ownerReferences', 'Finalizer', 'Status subresource', 'Webhook', 'Leader Election'],
+    },
     progress: () => {
       const ids = MODES.flatMap((m) => m.stars);
       return { got: ids.reduce((a, id) => a + KG.getStars(GAME, id), 0), total: ids.length * 3 };

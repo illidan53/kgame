@@ -12,10 +12,22 @@ const C = KG.categories;
 
 assert.equal(C.length, 7, 'K8s 舵轮有 7 根辐条，大类必须正好 7 个');
 assert.equal(new Set(C.map((c) => c.id)).size, C.length, '大类 id 重复');
+// 大厅可切换中 / 英文：每处文案都要有英文
+const hasEn = (obj, name) => {
+  for (const k of ['title', 'tagline']) assert.ok(obj.en && obj.en[k], `${name} 缺少英文 ${k}`);
+};
 for (const c of C) {
-  for (const k of ['id', 'icon', 'title', 'en', 'color', 'tagline']) assert.ok(c[k], `${c.id} 缺少 ${k}`);
+  for (const k of ['id', 'icon', 'title', 'color', 'tagline']) assert.ok(c[k], `${c.id} 缺少 ${k}`);
+  hasEn(c, c.id);
   assert.ok(c.entries.length + c.soon.length > 0, `${c.id} 至少要有一张卡片`);
-  for (const s of c.soon) for (const k of ['icon', 'title', 'tagline']) assert.ok(s[k], `${c.id} 的占位缺少 ${k}`);
+  for (const s of c.soon) {
+    for (const k of ['icon', 'title', 'tagline']) assert.ok(s[k], `${c.id} 的占位缺少 ${k}`);
+    hasEn(s, `${c.id} 的占位 ${s.title}`);
+  }
+}
+for (const g of games) {
+  hasEn(g, g.id);
+  for (const m of g.modes || []) hasEn(m, `${g.id}/${m.id}`);
 }
 
 // 每个入口都指向已注册的游戏 / 小游戏；每个游戏（带小游戏的按小游戏算）恰好出现一次

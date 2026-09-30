@@ -676,6 +676,11 @@
     title: '调度大师',
     tagline: '你是 kube-scheduler：按 requests 把 Pod 装进节点',
     concepts: ['capacity / allocatable', 'requests', '多维装箱', 'Taint / Toleration', 'nodeSelector', 'DaemonSet', 'Cluster Autoscaler'],
+    en: {
+      title: 'Scheduler Master',
+      tagline: 'You are kube-scheduler: pack Pods onto nodes by their requests',
+      concepts: ['capacity / allocatable', 'requests', 'multi-resource bin packing', 'Taint / Toleration', 'nodeSelector', 'DaemonSet', 'Cluster Autoscaler'],
+    },
     progress: () => ({ got: LEVELS.reduce((s, l) => s + KG.getStars(GAME, l.id), 0), total: LEVELS.length * 3 }),
     mount,
   });
