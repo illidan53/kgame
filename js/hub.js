@@ -15,7 +15,7 @@
       color: '#60a5fa',
       tagline: '单个容器怎么活下去：资源、QoS、OOM、探针',
       en: { title: 'Container', tagline: 'How a single container stays alive: resources, QoS, OOM, probes' },
-      entries: [{ game: 'resources' }],
+      entries: [{ game: 'stowage' }, { game: 'resources' }],
       soon: [
         { glyph: 'pulse', title: '探针急诊室', tagline: '探针配错了会怎样：重启风暴、流量打到还没准备好的 Pod', en: { title: 'Probe ER', tagline: "What misconfigured probes do: restart storms, traffic sent to Pods that aren't ready" } },
         { glyph: 'download', title: '镜像拉取', tagline: '镜像什么时候拉、从哪拉、拉不下来会怎样', en: { title: 'Image Pulls', tagline: 'When images are pulled, from where, and what happens when a pull fails' } },

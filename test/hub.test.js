@@ -5,7 +5,7 @@ const KG = { h() {}, s() {}, register: (g) => games.push(g), aliases: {}, games,
 const ctx = { KG, console, performance: { now: () => 0 } };
 ctx.window = ctx;
 vm.createContext(ctx);
-for (const f of ['icons.js', 'g1-scheduler.js', 'g2-sim.js', 'g2-resources.js', 'g3-concepts.js', 'g4-operator.js', 'hub.js']) {
+for (const f of ['icons.js', 'g1-scheduler.js', 'g2-sim.js', 'g2-resources.js', 'g3-concepts.js', 'g4-operator.js', 'g5-stowage-sim.js', 'g5-stowage.js', 'hub.js']) {
   vm.runInContext(fs.readFileSync(__dirname + '/../js/' + f, 'utf8'), ctx, { filename: f });
 }
 const C = KG.categories;

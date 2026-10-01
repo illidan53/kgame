@@ -14,6 +14,7 @@
     shield: '<path d="M12 3 20 6v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3Z"/><path d="m9 12 2 2 4-4"/>',
     bot: '<rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4"/><circle cx="12" cy="3.5" r="1"/><circle cx="9.5" cy="13" r="1.2"/><circle cx="14.5" cy="13" r="1.2"/>',
     // 游戏
+    ship: '<path d="M3 14h18l-2.6 6H5.6L3 14Z"/><path d="M6 14v-4h5v4M13 14V8h5v6"/><path d="M8.5 10V7"/>',
     gauge: '<path d="M4 16a8 8 0 1 1 16 0"/><path d="m12 16 4.5-5"/><circle cx="12" cy="16" r="1.4"/><path d="M7 16h-1M18 16h-1"/>',
     pack: '<rect x="3" y="3" width="8" height="10" rx="1.5"/><rect x="13" y="3" width="8" height="6" rx="1.5"/><rect x="13" y="11" width="8" height="10" rx="1.5"/><rect x="3" y="15" width="8" height="6" rx="1.5"/>',
     tag: '<path d="M3 12V4h8l10 10-8 8-10-10Z"/><circle cx="7.5" cy="8" r="1.5"/>',

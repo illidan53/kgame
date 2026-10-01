@@ -2049,3 +2049,517 @@ select.sel {
     grid-template-columns: 1fr;
   }
 }
+
+/* ================================================================ 配载（g5） */
+:root {
+  --g5-sky: #12203d;
+  --g5-sea: #1f4f8a;
+  --g5-sea-top: #4f86c9;
+  --g5-hull: #c7d4ea;
+  --g5-rail: #9fb2d4;
+  --g5-label: #1d2b3f;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    --g5-sky: #e9f2fb;
+    --g5-sea: #2f6fb0;
+    --g5-sea-top: #6aa3dc;
+    --g5-hull: #33496b;
+    --g5-rail: #4f6a92;
+    --g5-label: #e6f2ff;
+  }
+}
+.g5-layout {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+.g5-side {
+  position: sticky;
+  top: 8px;
+}
+.g5-side svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.g5-crowd-bg {
+  fill: var(--panel2);
+}
+.g5-svc {
+  fill: color-mix(in srgb, var(--card-accent) 22%, var(--panel2));
+  stroke: var(--card-accent);
+}
+.g5-svc-text {
+  font-size: 10px;
+  fill: var(--text);
+}
+.g5-now {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 6px 0 2px;
+  font-size: 12px;
+}
+.g5-clock {
+  font-weight: 700;
+}
+.g5-users {
+  color: var(--muted);
+  text-align: right;
+}
+.g5-grid {
+  stroke: var(--border2);
+}
+.g5-axis {
+  font-size: 9.5px;
+  fill: var(--muted);
+}
+.g5-cursor {
+  stroke: var(--text);
+  stroke-dasharray: 3 3;
+}
+.g5-fit {
+  margin-top: 6px;
+}
+.g5-fit-title {
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--text);
+}
+.g5-formulas {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+.g5-formulas li {
+  margin: 5px 0;
+  padding-left: 8px;
+  border-left: 3px solid var(--c);
+}
+.g5-formulas b {
+  color: var(--text);
+}
+
+/* Deployment 卡片：副本数 + 资源框（宽 = CPU，高 = 内存） */
+.g5-apps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 12px;
+}
+.g5-apps.single {
+  grid-template-columns: minmax(0, 400px);
+}
+.g5-app {
+  border-top: 3px solid var(--c);
+}
+.g5-app-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.g5-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--c);
+}
+.g5-app-kind {
+  font-size: 12px;
+  color: var(--muted);
+}
+.g5-stepper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+.g5-rep {
+  min-width: 4.2em;
+  text-align: center;
+  font-size: 13px;
+}
+.g5-box {
+  display: block;
+  width: 100%;
+  max-width: 330px;
+  height: auto;
+  margin: 0 auto;
+  touch-action: none;
+}
+.g5-use {
+  fill-opacity: 0.85;
+}
+.g5-use.peak {
+  fill-opacity: 0.5;
+}
+.g5-use.bad {
+  fill: #fb923c;
+}
+.g5-use-text {
+  font: 600 10px var(--mono);
+  fill: #0b1a33;
+}
+.g5-peak-ghost {
+  fill: none;
+  stroke: var(--muted);
+  stroke-dasharray: 3 3;
+}
+.g5-req {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+}
+.g5-lim {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 2;
+}
+.g5-handle {
+  cursor: grab;
+}
+.g5-handle.req {
+  fill: var(--panel);
+  stroke: var(--text);
+  stroke-width: 2;
+}
+.g5-handle.lim {
+  fill: var(--text);
+}
+.g5-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+  margin-top: 6px;
+}
+.g5-field {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.g5-field > span:first-child {
+  flex: 1;
+}
+.g5-num {
+  width: 66px;
+  padding: 3px 6px;
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  background: var(--panel2);
+  color: var(--text);
+  font-size: 12px;
+}
+.g5-unit {
+  width: 1.4em;
+}
+.g5-warn {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+/* 港口：船坞、码头、船队 */
+.g5-harbor {
+  margin-bottom: 12px;
+}
+.g5-harbor-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.g5-cost {
+  font-weight: 700;
+}
+.g5-yard-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.g5-yard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.g5-buy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  text-align: left;
+}
+.g5-buy span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.g5-dock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  min-height: 44px;
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  border: 1.5px dashed var(--border2);
+  border-radius: 10px;
+  background: var(--panel2);
+  outline: none;
+}
+.g5-dock:focus-visible {
+  box-shadow: 0 0 0 3px var(--card-accent);
+}
+.g5-dock.drop-ok {
+  border-color: var(--ok);
+}
+.g5-dock-label {
+  margin-right: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.g5-fleet {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+.g5-ship {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.g5-ship:focus-visible {
+  box-shadow: 0 0 0 3px var(--card-accent);
+}
+.g5-ship.drop-ok {
+  border-color: var(--ok);
+  box-shadow: 0 0 0 3px var(--ok-soft);
+}
+.g5-ship.drop-no {
+  border-color: var(--bad);
+  box-shadow: 0 0 0 3px var(--bad-soft);
+}
+.g5-ship-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 0;
+  font-size: 13px;
+}
+.g5-ship-head .mono {
+  font-size: 11.5px;
+}
+.g5-ship-x {
+  margin-left: auto;
+  padding: 2px 6px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+.g5-ship-x:hover {
+  background: var(--panel2);
+  color: var(--text);
+}
+/* 船：船头吃水 = CPU，船尾吃水 = 内存；水面以下被海遮住 */
+.g5-scene {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+  background: linear-gradient(var(--g5-sky), var(--panel));
+}
+.g5-vessel {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  transform-origin: 50% 100%;
+  transition: transform 0.35s cubic-bezier(0.3, 1.3, 0.5, 1);
+}
+.g5-deck {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  align-content: flex-start;
+  justify-content: center;
+  gap: 2px 3px;
+  height: 40px;
+  padding: 0 26px 2px;
+}
+.g5-hull {
+  display: block;
+}
+.g5-hull-body {
+  fill: var(--g5-hull);
+}
+.g5-hull-rail {
+  fill: var(--g5-rail);
+}
+.g5-band {
+  fill: #22c55e;
+}
+.g5-full {
+  stroke: #fbbf24;
+  stroke-width: 2;
+}
+.g5-hull-label {
+  font-size: 6.5px;
+  fill: var(--g5-label);
+}
+.g5-sea {
+  position: absolute;
+  top: 104px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.55);
+  background: linear-gradient(var(--g5-sea-top), var(--g5-sea));
+  opacity: 0.88;
+  transition: background 0.3s;
+}
+.g5-ship.overload .g5-sea {
+  background: linear-gradient(#fb923c, #c2410c);
+}
+.g5-alert {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  display: none;
+  transform: translateX(-50%);
+  color: #fff;
+  font-weight: 800;
+}
+.g5-ship.overload .g5-alert {
+  display: block;
+}
+.g5-meters {
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px 10px;
+}
+.g5-meter {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.g5-meter-label {
+  color: var(--muted);
+}
+/* 刻度 0–120%，绿色是 60–80% */
+.g5-meter-bar {
+  position: relative;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--panel2);
+}
+.g5-meter-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 16.67%;
+  background: var(--ok-soft);
+}
+.g5-meter-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 999px;
+  background: var(--muted);
+  transition: width 0.3s;
+}
+.g5-meter-fill.ok {
+  background: var(--ok);
+}
+.g5-meter-fill.bad {
+  background: var(--bad);
+}
+.g5-meter-text {
+  min-width: 92px;
+  font-size: 11.5px;
+  text-align: right;
+}
+/* Pod 就是集装箱 */
+.g5-pod {
+  width: 28px;
+  height: 17px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.28) 1px, transparent 1px) 0 0 / 5px 100%, var(--c);
+  color: #0b1a33;
+  font: 700 9px/1 var(--mono);
+  cursor: grab;
+  touch-action: none;
+}
+.g5-pod:hover {
+  filter: brightness(1.08);
+}
+.g5-pod:focus-visible,
+.g5-pod.picked {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+.g5-pod.lifting {
+  opacity: 0.35;
+}
+.g5-pod.warn {
+  box-shadow: 0 0 0 2px #fbbf24;
+}
+.g5-pod.oom {
+  background: #fb923c;
+  animation: g5-pop 0.5s ease 3;
+}
+@keyframes g5-pop {
+  50% {
+    transform: scale(1.35);
+  }
+}
+.g5-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--c);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  color: #0b1a33;
+  font: 700 11px var(--mono);
+  pointer-events: none;
+}
+.g5-scrub {
+  flex: 1;
+  min-width: 160px;
+}
+@media (max-width: 980px) {
+  .g5-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .g5-side {
+    position: static;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .g5-vessel,
+  .g5-meter-fill {
+    transition: none;
+  }
+  .g5-pod.oom {
+    animation: none;
+  }
+}

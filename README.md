@@ -24,7 +24,7 @@ Kubernetes 在希腊语里是"舵手"，logo 是 7 根辐条的舵轮。大厅�
 
 | 大类 | 地址 | 已上线 | 即将开放（占位） |
 |---|---|---|---|
-| 📦 容器 | `#/c/container` | OOM 求生记 | 探针急诊室、镜像拉取 |
+| 📦 容器 | `#/c/container` | 配载、OOM 求生记 | 探针急诊室、镜像拉取 |
 | 🧭 调度 | `#/c/scheduling` | 调度大师 | 亲和与拓扑分布、优先级与抢占 |
 | ⚙️ 工作负载 | `#/c/workloads` | 我是 ReplicaSet、滚动更新 | StatefulSet 有序启停、Job 与 CronJob |
 | 🌐 网络 | `#/c/networking` | 标签选择器 | 数据包之旅、NetworkPolicy 防火墙 |
@@ -46,6 +46,7 @@ Kubernetes 在希腊语里是"舵手"，logo 是 7 根辐条的舵轮。大厅�
 | 4 | 🔁 **我是 ReplicaSet** | 60 秒内手动维持副本数，应对误删、扩缩容、节点宕机、驱逐、容器崩溃。 | 控制循环、level-triggered、节点故障与 Pod 驱逐 |
 | 5 | 🚀 **滚动更新** | 调 maxSurge / maxUnavailable / readinessProbe，看流量粒子在 Service 和 Pod 之间流动。 | Deployment 滚动更新、readinessProbe、回滚 |
 | 6 | 🤖 **Operator 工坊** | ① 解剖图：6 个场景动画演示事件从 API Server 流经 Informer、WorkQueue 到 Reconcile 的全过程，点击组件看说明；② 我是 Reconciler：用代码卡片拼出 Reconcile 函数，同一段代码要经受多次触发；③ 概念连连看：24 个 Operator 概念配对。 | CRD / CR、Manager、Informer（Reflector / DeltaFIFO / Indexer）、EventHandler / Predicate、WorkQueue 去重与限速重试、Reconcile 返回值语义、幂等、level-triggered、ownerReferences 与 GC、Finalizer、Status 子资源 / observedGeneration、Admission Webhook、Leader Election、Resync |
+| 7 | 🚢 **配载** | 节点画成货船：船头吃水是 CPU 使用率，船尾吃水是内存使用率，绿色载重线是 60–80%。按每个 Deployment 的拟合关系（单个 Pod 用量 = 基线 + 斜率 × 分到的用户数）定副本数和 request / limit（直接拖资源框的角），在船坞挑船，把 Pod 拖上船，再开船跑一天。规划时船只按 request 下沉（调度器看到的），开船后才按真实用量下沉。四关：一艘船、两种货混装、按预算选船、错峰超卖。 | requests 决定调度、用量随流量增长、内存不可压缩（超 request 会被优先驱逐）、CPU 可压缩（超 limit 被节流）、二维装箱、节点型号的 CPU:内存比例、CPU 超卖 |
 
 ## 设计要点
 
@@ -78,6 +79,8 @@ js/g2-sim.js          OOM 求生记的模拟内核（纯逻辑，可在 Node 中
 js/g2-resources.js    OOM 求生记界面
 js/g3-concepts.js     标签选择器、我是 ReplicaSet、滚动更新
 js/g4-operator.js     Operator 工坊（三个小游戏）
+js/g5-stowage-sim.js  配载的模拟内核（纯逻辑，可在 Node 中测试）
+js/g5-stowage.js      配载界面
 test/                 关卡平衡、解谜可解性、大类配置测试
 ```
 
@@ -86,10 +89,10 @@ test/                 关卡平衡、解谜可解性、大类配置测试
 ## 测试
 
 ```bash
-node test/g2-sim.test.js && node test/g4-reconciler.test.js && node test/hub.test.js
+node test/g2-sim.test.js && node test/g4-reconciler.test.js && node test/hub.test.js && node test/g5-stowage.test.js
 ```
 
-测试会确认：OOM 关卡的初始配置拿 0 星、参考答案能拿 3 星；每个 Reconciler 关卡都有解，而且每个陷阱都会被判定出来；每个选择器关卡都存在正确答案；大类正好 7 个，每个上线的游戏恰好出现在一个大类里，旧地址都能转到存在的游戏；每个大类、游戏、占位都有图标和英文文案，卡牌背面的简介不超过 20 个字宽。
+测试会确认：OOM 关卡的初始配置拿 0 星、参考答案能拿 3 星；每个 Reconciler 关卡都有解，而且每个陷阱都会被判定出来；每个选择器关卡都存在正确答案；大类正好 7 个，每个上线的游戏恰好出现在一个大类里，旧地址都能转到存在的游戏；配载的穷举求解器确认每关都能三星、三星的副本组合不超过四分之一（后三关不到 5%）、每个服务 3 个副本的朴素做法拿不到两星、错峰关不超卖就拿不到三星，参考思路里的解在真实模拟里都是三星；每个大类、游戏、占位都有图标和英文文案，卡牌背面的简介不超过 20 个字宽。
 
 `node test/g1-timed.sim.js [起始间隔] [最终间隔] [最短运行] [运行浮动]` 用机器人玩家模拟"高峰时段"关，调难度时用。
 

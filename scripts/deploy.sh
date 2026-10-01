@@ -9,6 +9,7 @@ echo "==> 测试"
 node test/g2-sim.test.js >/dev/null
 node test/g4-reconciler.test.js >/dev/null
 node test/hub.test.js >/dev/null
+node test/g5-stowage.test.js >/dev/null
 
 echo "==> 构建"
 node scripts/build.mjs
