@@ -184,7 +184,7 @@
     return h('span', {
       class: 'hh-logo-mark',
       'aria-hidden': 'true',
-      html: `<svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle r="7"/><circle r="2.4"/><path d="${spokes}"/></svg>`,
+      html: `<svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><circle r="7"/><circle r="2.4"/><path d="${spokes}"/></svg>`,
     });
   }
 
@@ -374,12 +374,11 @@
           { class: 'hh-brand' },
           // 左上角的舵轮图标回到 nphunter 主页
           h('a', { class: 'hh-logo', href: 'https://nphunter.gg/', title: KG.t('返回 NPHunter 主页', 'Back to NPHunter'), 'aria-label': KG.t('返回 NPHunter 主页', 'Back to NPHunter') }, logoMark()),
-          h('div', null, h('h1', null, KG.siteTitle()), h('p', null, KG.t('用小游戏理解 Kubernetes', 'Learn Kubernetes by playing')))
+          h('div', null, h('h1', null, h('span', { class: 'hh-kube' }, 'Kube'), ' ', KG.t('游乐场', 'Playground')), h('p', null, KG.t('用小游戏理解 Kubernetes', 'Learn Kubernetes by playing')))
         ),
         h(
           'div',
           { class: 'hh-tools' },
-          h('p', { class: 'hh-hint' }, h('span', { class: 'hh-hint-wide' }, KG.t('拖动舵轮或按 ← → 切换', 'Drag the wheel or press ← →')), h('span', { class: 'hh-hint-narrow' }, KG.t('拖动舵轮切换', 'Drag the wheel to switch'))),
           h(
             'select',
             {

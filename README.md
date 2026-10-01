@@ -32,6 +32,8 @@ Kubernetes 在希腊语里是"舵手"，logo 是 7 根辐条的舵轮。大厅�
 | 🔐 安全 | `#/c/security` | — | RBAC 门禁、SecurityContext 加固 |
 | 🤖 Operator | `#/c/operator` | Operator 解剖、我是 Reconciler、概念连连看 | — |
 
+标题和大类名用圆润的 Fredoka，汉字配站酷快乐体，副标题用 Nunito。字体只内嵌用到的字符，改了标题或大类名后要跑 `node scripts/fonts.mjs` 重新生成 `css/fonts.css`。
+
 大类和卡片的配置在 `js/hub.js` 的 `CATEGORIES` 里。新游戏放进已有的大类，不新增大类（舵轮只有 7 根辐条）。游戏页的返回链接会回到它所属的大类。
 
 ## 游戏一览
@@ -66,6 +68,7 @@ Kubernetes 在希腊语里是"舵手"，logo 是 7 根辐条的舵轮。大厅�
 index.html            入口
 css/style.css         游戏页样式（跟随系统浅色 / 深色）
 css/hub.css           大厅样式（纸质海图 / 声呐屏两套配色）
+css/fonts.css         大厅标题字体的子集（Fredoka、Nunito、站酷快乐体），由 scripts/fonts.mjs 生成
 js/core.js            DOM 工具、路由、存档、弹窗等公共组件
 js/icons.js           统一的线性图标（大厅和游戏页顶栏）
 js/hub.js             大厅：7 个大类、舵轮、卡牌
