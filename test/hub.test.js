@@ -47,6 +47,23 @@ for (const g of games) {
   }
 }
 
+// 配色：以冷色为主，暖色最多一个黄、一个橙，不用粉色和红色
+const hue = (hex) => {
+  const n = parseInt(hex.slice(1), 16);
+  const [r, g, b] = [(n >> 16) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+  const mx = Math.max(r, g, b);
+  const d = mx - Math.min(r, g, b);
+  const h = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return (h * 60 + 360) % 360;
+};
+const warm = C.filter((c) => hue(c.color) < 70);
+for (const c of C) {
+  const x = hue(c.color);
+  assert.ok((x >= 20 && x < 70) || (x >= 130 && x <= 275), `${c.id} 的颜色 ${c.color}（色相 ${x.toFixed(0)}°）是粉色或红色`);
+}
+assert.ok(warm.length <= 2, `暖色大类超过两个：${warm.map((c) => c.id).join('、')}`);
+assert.equal(C.find((c) => c.id === 'container').color, '#60a5fa', '容器默认用蓝色');
+
 // 每个入口都指向已注册的游戏 / 小游戏；每个游戏（带小游戏的按小游戏算）恰好出现一次
 const seen = new Map();
 for (const c of C) {

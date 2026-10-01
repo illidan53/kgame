@@ -673,7 +673,7 @@
     id: GAME,
     icon: '🧩',
     glyph: 'pack',
-    color: '#60a5fa',
+    color: '#fb923c',
     title: '调度大师',
     tagline: '你是 kube-scheduler：按 requests 把 Pod 装进节点',
     concepts: ['capacity / allocatable', 'requests', '多维装箱', 'Taint / Toleration', 'nodeSelector', 'DaemonSet', 'Cluster Autoscaler'],

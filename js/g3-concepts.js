@@ -1216,7 +1216,7 @@
     id: 'selector',
     icon: '🏷️',
     glyph: 'tag',
-    color: '#22d3ee',
+    color: '#818cf8',
     title: '标签选择器',
     tagline: '写 selector 精确圈中目标 Pod，执行后才揭晓结果',
     concepts: ['Label / Selector', 'matchLabels', 'In / NotIn / Exists', 'Service', 'NetworkPolicy', 'PDB'],

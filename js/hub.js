@@ -6,12 +6,13 @@
   // 7 个大类，正好是 K8s 舵轮的 7 根辐条（从正上方开始顺时针）。
   // entries 是已上线的游戏（mode 指向游戏里的某个小游戏），soon 是"即将开放"的占位。
   // glyph 是 js/icons.js 里的图标名；en 里是英文文案，KG.loc 按当前语言取。
+  // 颜色：五个冷色加一个黄、一个橙，不用粉和红；相邻辐条的颜色尽量拉开，避免蓝、靛、紫挤在一起。
   const CATEGORIES = [
     {
       id: 'container',
       glyph: 'box',
       title: '容器',
-      color: '#f472b6',
+      color: '#60a5fa',
       tagline: '单个容器怎么活下去：资源、QoS、OOM、探针',
       en: { title: 'Container', tagline: 'How a single container stays alive: resources, QoS, OOM, probes' },
       entries: [{ game: 'resources' }],
@@ -24,7 +25,7 @@
       id: 'scheduling',
       glyph: 'compass',
       title: '调度',
-      color: '#60a5fa',
+      color: '#fb923c',
       tagline: 'Pod 该落到哪个节点：装箱、污点、亲和、抢占',
       en: { title: 'Scheduling', tagline: 'Which node a Pod lands on: bin packing, taints, affinity, preemption' },
       entries: [{ game: 'scheduler' }],
@@ -50,7 +51,7 @@
       id: 'networking',
       glyph: 'globe',
       title: '网络',
-      color: '#22d3ee',
+      color: '#818cf8',
       tagline: '流量怎么找到 Pod：Service、DNS、网络策略',
       en: { title: 'Networking', tagline: 'How traffic finds a Pod: Services, DNS, network policies' },
       entries: [{ game: 'selector' }],
@@ -73,7 +74,7 @@
       id: 'security',
       glyph: 'shield',
       title: '安全',
-      color: '#f87171',
+      color: '#22d3ee',
       tagline: '谁能对集群做什么，容器能对节点做什么',
       en: { title: 'Security', tagline: 'Who can do what to the cluster, and what a container can do to its node' },
       entries: [],

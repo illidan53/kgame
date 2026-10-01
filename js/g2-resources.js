@@ -527,7 +527,7 @@
     id: GAME,
     icon: '💥',
     glyph: 'gauge',
-    color: '#f472b6',
+    color: '#60a5fa',
     title: 'OOM 求生记',
     tagline: '调 request / limit，让服务撑过一整天',
     concepts: ['request vs limit', 'QoS 等级', 'OOMKilled', 'CrashLoopBackOff', 'kubelet 驱逐', '内核 OOM Killer', 'CPU 节流'],
