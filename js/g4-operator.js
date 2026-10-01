@@ -1121,14 +1121,15 @@
 
   // ================================================================ 入口
   const MODES = [
-    { id: 'anatomy', icon: '🔬', title: 'Operator 解剖', mount: mountAnatomy, stars: [], tagline: '6 个场景动画：事件怎么从 API Server 流经 Informer、WorkQueue 到 Reconcile', concepts: ['Informer', 'WorkQueue', 'Reconcile', 'Predicate'], en: { title: 'Operator Anatomy', tagline: "Six animated scenes: an event's trip from the API server to Reconcile" } },
-    { id: 'reconciler', icon: '🧠', title: '我是 Reconciler', mount: mountReconciler, stars: REC_LEVELS.map((l) => 'rec-' + l.id), tagline: '用代码卡片拼出 Reconcile 函数，经受多次触发也不出错', concepts: ['幂等', 'level-triggered', 'Finalizer', 'Status 子资源'], en: { title: 'I Am the Reconciler', tagline: 'Build Reconcile from code cards so it holds up when triggered again and again', concepts: ['idempotency', 'level-triggered', 'Finalizer', 'Status subresource'] } },
-    { id: 'match', icon: '🃏', title: '概念连连看', mount: mountMatch, stars: ROUNDS.map((_, k) => 'match-' + (k + 1)), tagline: '三组共 24 个 Operator 概念配对', concepts: ['CRD / CR', 'ownerReferences', 'Webhook', 'Leader Election'], en: { title: 'Concept Match', tagline: 'Match 24 Operator concepts in three rounds' } },
+    { id: 'anatomy', icon: '🔬', glyph: 'scope', blurb: '看一个事件怎么流到 Reconcile', title: 'Operator 解剖', mount: mountAnatomy, stars: [], tagline: '6 个场景动画：事件怎么从 API Server 流经 Informer、WorkQueue 到 Reconcile', concepts: ['Informer', 'WorkQueue', 'Reconcile', 'Predicate'], en: { blurb: 'Watch an event flow into Reconcile', title: 'Operator Anatomy', tagline: "Six animated scenes: an event's trip from the API server to Reconcile" } },
+    { id: 'reconciler', icon: '🧠', glyph: 'code', blurb: '拼出经得起反复触发的 Reconcile', title: '我是 Reconciler', mount: mountReconciler, stars: REC_LEVELS.map((l) => 'rec-' + l.id), tagline: '用代码卡片拼出 Reconcile 函数，经受多次触发也不出错', concepts: ['幂等', 'level-triggered', 'Finalizer', 'Status 子资源'], en: { blurb: 'Build a Reconcile that survives every retry', title: 'I Am the Reconciler', tagline: 'Build Reconcile from code cards so it holds up when triggered again and again', concepts: ['idempotency', 'level-triggered', 'Finalizer', 'Status subresource'] } },
+    { id: 'match', icon: '🃏', glyph: 'cards', blurb: '24 个 Operator 概念配对', title: '概念连连看', mount: mountMatch, stars: ROUNDS.map((_, k) => 'match-' + (k + 1)), tagline: '三组共 24 个 Operator 概念配对', concepts: ['CRD / CR', 'ownerReferences', 'Webhook', 'Leader Election'], en: { blurb: 'Match 24 Operator concepts', title: 'Concept Match', tagline: 'Match 24 Operator concepts in three rounds' } },
   ];
 
   KG.register({
     id: GAME,
     icon: '🤖',
+    glyph: 'bot',
     color: '#a78bfa',
     title: 'Operator 工坊',
     tagline: '拆开 Operator 看事件怎么流动，再亲手写一个 Reconcile',

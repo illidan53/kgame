@@ -5,7 +5,7 @@ const KG = { h() {}, s() {}, register: (g) => games.push(g), aliases: {}, games,
 const ctx = { KG, console, performance: { now: () => 0 } };
 ctx.window = ctx;
 vm.createContext(ctx);
-for (const f of ['g1-scheduler.js', 'g2-sim.js', 'g2-resources.js', 'g3-concepts.js', 'g4-operator.js', 'hub.js']) {
+for (const f of ['icons.js', 'g1-scheduler.js', 'g2-sim.js', 'g2-resources.js', 'g3-concepts.js', 'g4-operator.js', 'hub.js']) {
   vm.runInContext(fs.readFileSync(__dirname + '/../js/' + f, 'utf8'), ctx, { filename: f });
 }
 const C = KG.categories;
@@ -16,18 +16,35 @@ assert.equal(new Set(C.map((c) => c.id)).size, C.length, '大类 id 重复');
 const hasEn = (obj, name) => {
   for (const k of ['title', 'tagline']) assert.ok(obj.en && obj.en[k], `${name} 缺少英文 ${k}`);
 };
+// 图标都要在 js/icons.js 里画过，不用 emoji
+const hasGlyph = (obj, name) => assert.ok(obj.glyph && KG.ICONS[obj.glyph], `${name} 的图标 ${obj.glyph} 不存在`);
 for (const c of C) {
-  for (const k of ['id', 'icon', 'title', 'color', 'tagline']) assert.ok(c[k], `${c.id} 缺少 ${k}`);
+  for (const k of ['id', 'glyph', 'title', 'color', 'tagline']) assert.ok(c[k], `${c.id} 缺少 ${k}`);
   hasEn(c, c.id);
+  hasGlyph(c, c.id);
   assert.ok(c.entries.length + c.soon.length > 0, `${c.id} 至少要有一张卡片`);
   for (const s of c.soon) {
-    for (const k of ['icon', 'title', 'tagline']) assert.ok(s[k], `${c.id} 的占位缺少 ${k}`);
+    for (const k of ['glyph', 'title', 'tagline']) assert.ok(s[k], `${c.id} 的占位缺少 ${k}`);
     hasEn(s, `${c.id} 的占位 ${s.title}`);
+    hasGlyph(s, `${c.id} 的占位 ${s.title}`);
   }
 }
+// 卡牌背面的一句话简介：中英文都要有，而且要短
+// 视觉宽度：汉字和全角标点算 1，字母数字和空格算 0.5
+const width = (str) => [...str].reduce((a, ch) => a + (/[\u3000-\u9fff\uff00-\uffef]/.test(ch) ? 1 : 0.5), 0);
+const hasBlurb = (obj, name) => {
+  assert.ok(obj.blurb && width(obj.blurb) <= 20, `${name} 的简介缺失或超过 20 字宽：${obj.blurb}`);
+  assert.ok(obj.en && obj.en.blurb && obj.en.blurb.length <= 48, `${name} 的英文简介缺失或太长：${obj.en && obj.en.blurb}`);
+};
 for (const g of games) {
   hasEn(g, g.id);
-  for (const m of g.modes || []) hasEn(m, `${g.id}/${m.id}`);
+  hasGlyph(g, g.id);
+  if (!g.modes) hasBlurb(g, g.id);
+  for (const m of g.modes || []) {
+    hasEn(m, `${g.id}/${m.id}`);
+    hasGlyph(m, `${g.id}/${m.id}`);
+    hasBlurb(m, `${g.id}/${m.id}`);
+  }
 }
 
 // 每个入口都指向已注册的游戏 / 小游戏；每个游戏（带小游戏的按小游戏算）恰好出现一次

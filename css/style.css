@@ -193,6 +193,23 @@ button {
   color: var(--muted);
   font-size: 0.9rem;
 }
+/* js/icons.js 的线性图标，大小跟随字号、颜色跟随文字 */
+.kg-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 1.15em;
+  height: 1.15em;
+  flex-shrink: 0;
+}
+.kg-icon svg {
+  width: 100%;
+  height: 100%;
+}
+.tb-icon,
+.mode-tab .mt-icon {
+  display: inline-flex;
+  color: var(--card-accent, var(--accent));
+}
 
 /* ================================================================ 按钮 / 徽章 */
 .btn {

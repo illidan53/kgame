@@ -313,7 +313,7 @@
         h(
           'a',
           { class: 'mode-tab' + (m.id === currentId ? ' active' : ''), href: `#/${gameId}/${m.id}` },
-          h('span', { class: 'mt-icon' }, m.icon),
+          h('span', { class: 'mt-icon' }, m.glyph && KG.icon ? KG.icon(m.glyph) : m.icon),
           h('span', null, KG.loc(m, 'title'))
         )
       )
@@ -420,7 +420,7 @@
           'header',
           { class: 'topbar' },
           h('a', { class: 'back', href: cat ? '#/c/' + cat.id : '#/' }, '← ' + (cat ? KG.loc(cat, 'title') : KG.t('大厅', 'Lobby'))),
-          h('div', { class: 'tb-title' }, h('span', { class: 'tb-icon' }, game.icon), h('span', null, KG.loc(game, 'title'))),
+          h('div', { class: 'tb-title' }, h('span', { class: 'tb-icon' }, game.glyph && KG.icon ? KG.icon(game.glyph) : game.icon), h('span', null, KG.loc(game, 'title'))),
           h('div', { class: 'tb-sub' }, KG.loc(game, 'tagline'))
         ),
         body

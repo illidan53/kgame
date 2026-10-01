@@ -1,158 +1,90 @@
-/* Kube 游乐场 —— 大厅：转动 7 辐舵轮选大类，大类里的游戏卡片在旁边轮动 */
+/* Kube 游乐场 —— 大厅：转动 7 辐黏土舵轮选大类，大类里的游戏像一手牌一样在旁边展开 */
 (function () {
   'use strict';
   const { h, s } = KG;
 
   // 7 个大类，正好是 K8s 舵轮的 7 根辐条（从正上方开始顺时针）。
   // entries 是已上线的游戏（mode 指向游戏里的某个小游戏），soon 是"即将开放"的占位。
-  // en 里是英文文案，KG.loc 按当前语言取。
+  // glyph 是 js/icons.js 里的图标名；en 里是英文文案，KG.loc 按当前语言取。
   const CATEGORIES = [
     {
       id: 'container',
-      icon: '📦',
+      glyph: 'box',
       title: '容器',
       color: '#f472b6',
       tagline: '单个容器怎么活下去：资源、QoS、OOM、探针',
       en: { title: 'Container', tagline: 'How a single container stays alive: resources, QoS, OOM, probes' },
       entries: [{ game: 'resources' }],
       soon: [
-        {
-          icon: '🩺',
-          title: '探针急诊室',
-          tagline: '探针配错了会怎样：重启风暴、流量打到还没准备好的 Pod',
-          concepts: ['livenessProbe', 'readinessProbe', 'startupProbe', 'restartPolicy'],
-          en: { title: 'Probe ER', tagline: "What misconfigured probes do: restart storms, traffic sent to Pods that aren't ready" },
-        },
-        {
-          icon: '📥',
-          title: '镜像拉取',
-          tagline: '镜像什么时候拉、从哪拉、拉不下来会怎样',
-          concepts: ['imagePullPolicy', 'ImagePullBackOff', 'imagePullSecrets'],
-          en: { title: 'Image Pulls', tagline: 'When images are pulled, from where, and what happens when a pull fails' },
-        },
+        { glyph: 'pulse', title: '探针急诊室', tagline: '探针配错了会怎样：重启风暴、流量打到还没准备好的 Pod', en: { title: 'Probe ER', tagline: "What misconfigured probes do: restart storms, traffic sent to Pods that aren't ready" } },
+        { glyph: 'download', title: '镜像拉取', tagline: '镜像什么时候拉、从哪拉、拉不下来会怎样', en: { title: 'Image Pulls', tagline: 'When images are pulled, from where, and what happens when a pull fails' } },
       ],
     },
     {
       id: 'scheduling',
-      icon: '🧭',
+      glyph: 'compass',
       title: '调度',
       color: '#60a5fa',
       tagline: 'Pod 该落到哪个节点：装箱、污点、亲和、抢占',
       en: { title: 'Scheduling', tagline: 'Which node a Pod lands on: bin packing, taints, affinity, preemption' },
       entries: [{ game: 'scheduler' }],
       soon: [
-        {
-          icon: '🧲',
-          title: '亲和与拓扑分布',
-          tagline: '让 Pod 扎堆或者散开，跨可用区均匀分布',
-          concepts: ['nodeAffinity', 'podAntiAffinity', 'topologySpreadConstraints'],
-          en: { title: 'Affinity & Topology Spread', tagline: 'Pack Pods together or spread them evenly across zones' },
-        },
-        {
-          icon: '⚔️',
-          title: '优先级与抢占',
-          tagline: '资源不够的时候，谁给谁让位',
-          concepts: ['PriorityClass', 'Preemption', 'PDB'],
-          en: { title: 'Priority & Preemption', tagline: 'When resources run out, who makes way for whom' },
-        },
+        { glyph: 'magnet', title: '亲和与拓扑分布', tagline: '让 Pod 扎堆或者散开，跨可用区均匀分布', en: { title: 'Affinity & Topology Spread', tagline: 'Pack Pods together or spread them evenly across zones' } },
+        { glyph: 'priority', title: '优先级与抢占', tagline: '资源不够的时候，谁给谁让位', en: { title: 'Priority & Preemption', tagline: 'When resources run out, who makes way for whom' } },
       ],
     },
     {
       id: 'workloads',
-      icon: '⚙️',
+      glyph: 'gear',
       title: '工作负载',
       color: '#34d399',
       tagline: '控制器怎么维持期望状态，又怎么平稳发布',
       en: { title: 'Workloads', tagline: 'How controllers hold the desired state and roll out safely' },
       entries: [{ game: 'replicaset' }, { game: 'rollout' }],
       soon: [
-        {
-          icon: '🔢',
-          title: 'StatefulSet 有序启停',
-          tagline: '稳定的名字和存储，按序号一个一个来',
-          concepts: ['StatefulSet', 'Headless Service', 'podManagementPolicy'],
-          en: { title: 'StatefulSet Ordering', tagline: 'Stable names and storage, started one ordinal at a time' },
-        },
-        {
-          icon: '⏱️',
-          title: 'Job 与 CronJob',
-          tagline: '跑完就结束的任务：并行、重试、定时',
-          concepts: ['Job', 'backoffLimit', 'CronJob', 'concurrencyPolicy'],
-          en: { title: 'Jobs & CronJobs', tagline: 'Run-to-completion tasks: parallelism, retries, schedules' },
-        },
+        { glyph: 'ordered', title: 'StatefulSet 有序启停', tagline: '稳定的名字和存储，按序号一个一个来', en: { title: 'StatefulSet Ordering', tagline: 'Stable names and storage, started one ordinal at a time' } },
+        { glyph: 'clock', title: 'Job 与 CronJob', tagline: '跑完就结束的任务：并行、重试、定时', en: { title: 'Jobs & CronJobs', tagline: 'Run-to-completion tasks: parallelism, retries, schedules' } },
       ],
     },
     {
       id: 'networking',
-      icon: '🌐',
+      glyph: 'globe',
       title: '网络',
       color: '#22d3ee',
       tagline: '流量怎么找到 Pod：Service、DNS、网络策略',
       en: { title: 'Networking', tagline: 'How traffic finds a Pod: Services, DNS, network policies' },
       entries: [{ game: 'selector' }],
       soon: [
-        {
-          icon: '📨',
-          title: '数据包之旅',
-          tagline: '跟着一个请求，从 DNS 一路走到 Pod',
-          concepts: ['ClusterIP', 'kube-proxy', 'CoreDNS', 'Ingress / Gateway'],
-          en: { title: "A Packet's Journey", tagline: 'Follow one request from DNS all the way to a Pod' },
-        },
-        {
-          icon: '🧱',
-          title: 'NetworkPolicy 防火墙',
-          tagline: '默认全通；一旦被策略选中，就只放行允许的流量',
-          concepts: ['NetworkPolicy', 'ingress / egress', 'default deny'],
-          en: { title: 'NetworkPolicy Firewall', tagline: 'All traffic flows until a policy selects a Pod; then only what it allows' },
-        },
+        { glyph: 'send', title: '数据包之旅', tagline: '跟着一个请求，从 DNS 一路走到 Pod', en: { title: "A Packet's Journey", tagline: 'Follow one request from DNS all the way to a Pod' } },
+        { glyph: 'wall', title: 'NetworkPolicy 防火墙', tagline: '默认全通；一旦被策略选中，就只放行允许的流量', en: { title: 'NetworkPolicy Firewall', tagline: 'All traffic flows until a policy selects a Pod; then only what it allows' } },
       ],
     },
     {
       id: 'storage',
-      icon: '💾',
+      glyph: 'db',
       title: '存储',
       color: '#fbbf24',
       tagline: '数据放在哪里，Pod 重建以后还在不在',
       en: { title: 'Storage', tagline: 'Where data lives, and whether it survives a Pod being recreated' },
       entries: [],
-      soon: [
-        {
-          icon: '🔗',
-          title: 'PVC 配对',
-          tagline: '把 PVC 配给合适的 PV，或者让 StorageClass 现造一个',
-          concepts: ['PV / PVC', 'StorageClass', 'accessModes', 'reclaimPolicy'],
-          en: { title: 'PVC Matchmaking', tagline: 'Bind a PVC to the right PV, or have a StorageClass provision one' },
-        },
-      ],
+      soon: [{ glyph: 'link', title: 'PVC 配对', tagline: '把 PVC 配给合适的 PV，或者让 StorageClass 现造一个', en: { title: 'PVC Matchmaking', tagline: 'Bind a PVC to the right PV, or have a StorageClass provision one' } }],
     },
     {
       id: 'security',
-      icon: '🔐',
+      glyph: 'shield',
       title: '安全',
       color: '#f87171',
       tagline: '谁能对集群做什么，容器能对节点做什么',
       en: { title: 'Security', tagline: 'Who can do what to the cluster, and what a container can do to its node' },
       entries: [],
       soon: [
-        {
-          icon: '🚪',
-          title: 'RBAC 门禁',
-          tagline: '给 ServiceAccount 刚好够用的权限',
-          concepts: ['Role / ClusterRole', 'RoleBinding', 'ServiceAccount'],
-          en: { title: 'RBAC Gatekeeper', tagline: 'Give a ServiceAccount exactly the permissions it needs' },
-        },
-        {
-          icon: '🛡️',
-          title: 'SecurityContext 加固',
-          tagline: '不用 root 运行、只读根文件系统、收回多余的 capability',
-          concepts: ['runAsNonRoot', 'capabilities', 'Pod Security Admission'],
-          en: { title: 'SecurityContext Hardening', tagline: 'No root, a read-only root filesystem, no extra capabilities' },
-        },
+        { glyph: 'key', title: 'RBAC 门禁', tagline: '给 ServiceAccount 刚好够用的权限', en: { title: 'RBAC Gatekeeper', tagline: 'Give a ServiceAccount exactly the permissions it needs' } },
+        { glyph: 'lock', title: 'SecurityContext 加固', tagline: '不用 root 运行、只读根文件系统、收回多余的 capability', en: { title: 'SecurityContext Hardening', tagline: 'No root, a read-only root filesystem, no extra capabilities' } },
       ],
     },
     {
       id: 'operator',
-      icon: '🤖',
+      glyph: 'bot',
       title: 'Operator',
       color: '#a78bfa',
       tagline: '用 CRD 和控制器扩展 K8s：Informer、Reconcile、Finalizer',
@@ -178,20 +110,14 @@
   function entryInfo(e) {
     const g = KG.games.find((x) => x.id === e.game);
     if (!g) return null;
-    if (!e.mode) {
-      return { href: '#/' + g.id, icon: g.icon, title: KG.loc(g, 'title'), tagline: KG.loc(g, 'tagline'), concepts: KG.loc(g, 'concepts'), color: g.color, prog: g.progress ? g.progress() : null };
-    }
-    const m = g.modes.find((x) => x.id === e.mode);
-    const ids = m.stars || [];
-    return {
-      href: `#/${g.id}/${m.id}`,
-      icon: m.icon,
-      title: KG.loc(m, 'title'),
-      tagline: KG.loc(m, 'tagline'),
-      concepts: KG.loc(m, 'concepts') || [],
-      color: g.color,
-      prog: ids.length ? { got: ids.reduce((a, id) => a + KG.getStars(g.id, id), 0), total: ids.length * 3 } : null,
-    };
+    const m = e.mode ? g.modes.find((x) => x.id === e.mode) : null;
+    const src = m || g;
+    let prog = null;
+    if (m) {
+      const ids = m.stars || [];
+      if (ids.length) prog = { got: ids.reduce((a, id) => a + KG.getStars(g.id, id), 0), total: ids.length * 3 };
+    } else if (g.progress) prog = g.progress();
+    return { href: m ? `#/${g.id}/${m.id}` : '#/' + g.id, glyph: src.glyph, title: KG.loc(src, 'title'), blurb: KG.loc(src, 'blurb'), prog };
   }
 
   function sumProgress(infos) {
@@ -199,225 +125,207 @@
   }
 
   // ---------------------------------------------------------------- 舵轮图形
-  // 木制舵轮加黄铜配件。viewBox 以轮心为原点，半径 50 对应舵轮宽度的一半
-  const ring = (r) => `M${r} 0 A${r} ${r} 0 1 0 ${-r} 0 A${r} ${r} 0 1 0 ${r} 0 Z`;
-  // 车削把手：从轮缘外侧到末端的球形握柄（辐条朝上的局部坐标）
-  const HANDLE = 'M-1.3 -34 L-1.3 -36 C-2.5 -36.8 -2.5 -38.7 -1.1 -39.4 L-1.1 -40.2 C-2.7 -40.9 -2.9 -44.9 0 -45.8 C2.9 -44.9 2.7 -40.9 1.1 -40.2 L1.1 -39.4 C2.5 -38.7 2.5 -36.8 1.3 -36 L1.3 -34 Z';
-
-  function gradient(tag, attrs, stops) {
-    return s(tag, attrs, stops.map(([offset, color]) => s('stop', { offset, 'stop-color': color })));
-  }
+  // 黏土质感：几何形状跟着转，光影不转——高光永远在左上、阴影永远在右下，转起来才像实物。
+  // 颜色全部由当前大类色 --cat 推出来（见 css 的 --clay-*），换大类时整只舵轮跟着换色。
+  // 分三层：转动层（辐条、轮毂法兰、螺栓）、静止层（轮缘和它的高光阴影）、HTML 的轮心盖和把手球。
+  // viewBox 以轮心为原点，半径 50 对应舵轮宽度的一半。
+  const LIGHT = [-0.6, -0.8]; // 光从左上来
+  const arc = (r, a0, a1) => {
+    const p = (a) => `${(r * Math.sin(a)).toFixed(2)} ${(-r * Math.cos(a)).toFixed(2)}`;
+    return `M${p(a0)} A${r} ${r} 0 0 1 ${p(a1)}`;
+  };
 
   function wheelArt() {
-    const at = (r, deg) => ({ cx: (r * Math.sin((deg * Math.PI) / 180)).toFixed(2), cy: (-r * Math.cos((deg * Math.PI) / 180)).toFixed(2) });
-    const defs = s(
-      'defs',
-      null,
-      // 辐条横截面的明暗：跟着辐条一起转，像圆木
-      gradient('linearGradient', { id: 'hh-wood-spoke', gradientUnits: 'userSpaceOnUse', x1: -1.6, y1: 0, x2: 1.6, y2: 0 }, [
-        [0, '#4e2a10'],
-        [0.4, '#c68a4a'],
-        [0.6, '#a86a31'],
-        [1, '#4a270e'],
-      ]),
-      // 轮缘截面的明暗：沿半径变化，转动时看起来不变
-      gradient('radialGradient', { id: 'hh-wood-rim', gradientUnits: 'userSpaceOnUse', cx: 0, cy: 0, r: 35 }, [
-        [0.81, '#4e2a10'],
-        [0.84, '#8a5226'],
-        [0.89, '#c98d4c'],
-        [0.94, '#b0733a'],
-        [0.97, '#7a4520'],
-        [0.99, '#4a270e'],
-      ]),
-      gradient('radialGradient', { id: 'hh-wood-hub', gradientUnits: 'userSpaceOnUse', cx: 0, cy: 0, r: 12.5 }, [
-        [0.6, '#a86a31'],
-        [0.85, '#7a4520'],
-        [1, '#4a270e'],
-      ])
-    );
-    const spokes = CATEGORIES.map((c, i) =>
-      s(
-        'g',
-        { class: 'hh-spoke', style: '--c:' + c.color, transform: `rotate(${(i * STEP).toFixed(3)})` },
-        s('rect', { class: 'hh-wood', x: -1.3, y: -34.5, width: 2.6, height: 23.5, rx: 0.6 }),
-        s('path', { class: 'hh-wood', d: HANDLE }),
-        s('rect', { class: 'hh-collar', x: -1.7, y: -35.3, width: 3.4, height: 1.2, rx: 0.3 }),
-        s('line', { class: 'hh-inlay', x1: 0, y1: -28, x2: 0, y2: -14 })
-      )
-    );
-    const svg = s(
+    const hl = [];
+    const spokes = CATEGORIES.map((_, i) => {
+      const left = s('line', { class: 'hh-sp-hl', x1: -1.25, y1: -14, x2: -1.25, y2: -38 });
+      const right = s('line', { class: 'hh-sp-hl', x1: 1.25, y1: -14, x2: 1.25, y2: -38 });
+      hl.push([left, right]);
+      return s('g', { transform: `rotate(${(i * STEP).toFixed(3)})` }, s('line', { class: 'hh-sp', x1: 0, y1: -11, x2: 0, y2: -41 }), left, right);
+    });
+    const bolts = CATEGORIES.map((_, i) => {
+      const a = ((i + 0.5) * STEP * Math.PI) / 180;
+      return s('circle', { class: 'hh-bolt', r: 1.05, cx: (15.3 * Math.sin(a)).toFixed(2), cy: (-15.3 * Math.cos(a)).toFixed(2) });
+    });
+    const spin = s('svg', { class: 'hh-wheel-spin', viewBox: '-50 -50 100 100', 'aria-hidden': 'true' }, spokes, s('circle', { class: 'hh-flange', r: 17.5 }), bolts);
+    // 轮缘是一根圆管：沿半径方向的渐变就是截面的明暗，转动时看起来不变
+    const rim = s(
       'svg',
-      { class: 'hh-wheel-art', viewBox: '-50 -50 100 100', 'aria-hidden': 'true' },
-      defs,
-      spokes,
-      s('path', { class: 'hh-rim', d: ring(34.5) + ring(28.5), 'fill-rule': 'evenodd' }),
-      s('circle', { class: 'hh-grain', r: 29.8 }),
-      s('circle', { class: 'hh-grain', r: 33.2 }),
-      s('circle', { class: 'hh-band', r: 31.5 }),
-      CATEGORIES.map((_, i) => s('circle', { class: 'hh-cap', r: 1.3, ...at(31.5, i * STEP) })),
-      s('circle', { class: 'hh-hub-wood', r: 12.5 }),
-      CATEGORIES.map((_, i) => s('circle', { class: 'hh-cap', r: 0.8, ...at(10.8, i * STEP + STEP / 2) }))
+      { class: 'hh-wheel-rim', viewBox: '-50 -50 100 100', 'aria-hidden': 'true' },
+      s(
+        'defs',
+        null,
+        s(
+          'radialGradient',
+          { id: 'hh-rim-g', gradientUnits: 'userSpaceOnUse', cx: 0, cy: 0, r: 39 },
+          [
+            ['0.72', 's0'],
+            ['0.79', 's1'],
+            ['0.86', 's2'],
+            ['0.93', 's3'],
+            ['1', 's0'],
+          ].map(([offset, cls]) => s('stop', { offset, class: cls }))
+        ),
+        s('filter', { id: 'hh-soft', x: '-20%', y: '-20%', width: '140%', height: '140%' }, s('feGaussianBlur', { stdDeviation: 0.7 }))
+      ),
+      s('circle', { class: 'hh-rim', r: 34 }),
+      s('path', { class: 'hh-rim-light', d: arc(36.2, -2.7, -1.1), filter: 'url(#hh-soft)' }),
+      s('path', { class: 'hh-rim-shade', d: arc(31.3, 0.5, 2.1), filter: 'url(#hh-soft)' })
     );
-    return { svg, spokes };
+    return { spin, rim, hl };
   }
 
-  // ---------------------------------------------------------------- 卡片轮动
-  // 横向 scroll-snap 行：每张卡的 --focus（居中为 1，离开一张为 0）和 --shift（带符号的偏移）
-  // 跟随滚动位置，侧面的卡片转向中间、缩小、变暗
-  function carousel(slides) {
-    const track = h('div', { class: 'hh-track' }, slides);
-    const dots = slides.map((_, i) => h('button', { class: 'hh-dot', 'aria-label': KG.t(`第 ${i + 1} 张`, `Card ${i + 1}`), onclick: () => go(i) }));
-    const prev = h('button', { class: 'hh-arrow', 'aria-label': KG.t('上一张', 'Previous'), onclick: () => go(active - 1) }, '‹');
-    const next = h('button', { class: 'hh-arrow', 'aria-label': KG.t('下一张', 'Next'), onclick: () => go(active + 1) }, '›');
-    // 只有一张卡时也占着控制条的位置，保持各大类面板等高
-    const root = h('div', { class: 'hh-carousel' }, track, h('div', { class: 'hh-ctrl' + (slides.length > 1 ? '' : ' single') }, prev, h('div', { class: 'hh-dots' }, dots), next));
+  // 左上角的小舵轮，链接回 nphunter 主页
+  function logoMark() {
+    const spokes = Array.from({ length: 7 }, (_, i) => {
+      const a = (i * 2 * Math.PI) / 7;
+      return `M${(3.2 * Math.sin(a)).toFixed(2)} ${(-3.2 * Math.cos(a)).toFixed(2)}L${(10.5 * Math.sin(a)).toFixed(2)} ${(-10.5 * Math.cos(a)).toFixed(2)}`;
+    }).join('');
+    return h('span', {
+      class: 'hh-logo-mark',
+      'aria-hidden': 'true',
+      html: `<svg viewBox="-12 -12 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle r="7"/><circle r="2.4"/><path d="${spokes}"/></svg>`,
+    });
+  }
 
-    let centers = [];
-    let slideW = 1;
-    let active = 0;
-    let target = null;
-    let frame = 0;
-    let settleTimer = 0;
+  // ---------------------------------------------------------------- 卡牌
+  // 正面只有插画、标题、三颗星；点一下翻面才看到一句话简介和"开始"。未上线的游戏是背面朝上的牌。
+  const starRow = (prog) => {
+    const n = prog && prog.total ? Math.floor((3 * prog.got) / prog.total) : 0;
+    return h('span', { class: 'kc-stars', 'aria-hidden': 'true' }, '★'.repeat(n), h('i', null, '★'.repeat(3 - n)));
+  };
 
-    function measure() {
-      slideW = slides[0].offsetWidth || 1;
-      centers = slides.map((el) => el.offsetLeft + el.offsetWidth / 2);
-    }
-    function setActive(i) {
-      active = i;
-      slides.forEach((el, k) => el.classList.toggle('is-active', k === i));
-      dots.forEach((d, k) => (k === i ? d.setAttribute('aria-current', 'true') : d.removeAttribute('aria-current')));
-      prev.disabled = i === 0;
-      next.disabled = i === slides.length - 1;
-    }
-    function render() {
-      frame = 0;
-      const mid = track.scrollLeft + track.clientWidth / 2;
-      let nearest = 0;
-      slides.forEach((el, i) => {
-        const off = (centers[i] - mid) / slideW;
-        el.style.setProperty('--focus', Math.max(0, 1 - Math.abs(off)).toFixed(3));
-        el.style.setProperty('--shift', Math.max(-1, Math.min(1, off)).toFixed(3));
-        if (Math.abs(off) < Math.abs((centers[nearest] - mid) / slideW)) nearest = i;
-      });
-      const cur = target ?? nearest;
-      if (cur !== active) setActive(cur);
-    }
-    function settle() {
-      clearTimeout(settleTimer);
-      target = null;
-      render();
-    }
-    function go(i) {
-      target = Math.max(0, Math.min(slides.length - 1, i));
-      setActive(target);
-      track.scrollTo({ left: centers[target] - track.clientWidth / 2, behavior: reducedMotion() ? 'auto' : 'smooth' });
-      clearTimeout(settleTimer);
-      settleTimer = setTimeout(settle, 700);
-    }
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(render);
-      clearTimeout(settleTimer);
-      settleTimer = setTimeout(settle, 160);
-    };
-    track.addEventListener('scroll', onScroll, { passive: true });
-    track.addEventListener('scrollend', settle);
-    // 鼠标点侧面的卡片：先把它转到中间，不直接进入；键盘回车（detail 为 0）照常进入
-    track.addEventListener(
-      'click',
-      (e) => {
-        const i = slides.indexOf(e.target.closest('.hh-slide'));
-        if (e.detail === 0 || i < 0 || i === (target ?? active)) return;
-        e.preventDefault();
-        go(i);
-      },
-      true
+  function liveCard(info) {
+    const progText = info.prog ? KG.t(`${info.prog.got} / ${info.prog.total} 星`, `${info.prog.got} of ${info.prog.total} stars`) : KG.t('动画演示', 'Walkthrough');
+    const front = h(
+      'button',
+      { class: 'kc-face kc-front', 'aria-label': info.title + KG.t('，', ', ') + progText, 'aria-expanded': 'false' },
+      h('span', { class: 'kc-inner' }, h('span', { class: 'kc-art' }, KG.icon(info.glyph), h('span', { class: 'kc-sheen' })), h('span', { class: 'kc-title' }, info.title), info.prog ? starRow(info.prog) : h('span', { class: 'kc-demo' }, KG.t('演示', 'Demo')))
     );
-    track.addEventListener('focusin', (e) => {
-      const i = slides.indexOf(e.target.closest('.hh-slide'));
-      if (i >= 0 && i !== (target ?? active)) go(i);
+    const back = h(
+      'a',
+      { class: 'kc-face kc-back', href: info.href, tabindex: '-1', 'aria-hidden': 'true' },
+      h(
+        'span',
+        { class: 'kc-inner' },
+        h('span', { class: 'kc-title' }, info.title),
+        h('span', { class: 'kc-blurb' }, info.blurb),
+        h('span', { class: 'kc-count' }, info.prog ? `★ ${info.prog.got} / ${info.prog.total}` : progText),
+        h('span', { class: 'kc-go' }, KG.t('开始', 'Play'), ' →')
+      )
+    );
+    return h('div', { class: 'kc' }, h('div', { class: 'kc-flip' }, front, back));
+  }
+
+  function soonCard(item) {
+    const title = KG.loc(item, 'title');
+    return h(
+      'div',
+      { class: 'kc soon', role: 'img', 'aria-label': KG.t(`即将开放：${title}`, `Coming soon: ${title}`) },
+      h('div', { class: 'kc-flip' }, h('div', { class: 'kc-face' }, h('span', { class: 'kc-inner' }, h('span', { class: 'kc-q' }, '?'), h('span', { class: 'kc-soon' }, KG.t('即将开放', 'Coming soon')), h('span', { class: 'kc-soon-title' }, title))))
+    );
+  }
+
+  // 一手牌：扇形摆开，悬停抬起并跟着指针微微倾斜，点击翻面
+  function deck(cat, from) {
+    const infos = cat.entries.map(entryInfo).filter(Boolean);
+    const cards = [...infos.map(liveCard), ...cat.soon.map(soonCard)];
+    const el = h('div', { class: 'hh-deck' }, cards);
+    let open = null;
+
+    function layout() {
+      const n = cards.length;
+      const kw = cards[0].offsetWidth || 1;
+      const mid = (n - 1) / 2;
+      // 牌之间压住约五分之一，看起来是一手牌而不是一排卡片
+      // 两侧各留约 28px，倾斜后的牌角也不出屏
+      const gap = n > 1 ? Math.min(kw * 0.8, (el.clientWidth - kw - 56) / (n - 1)) : 0;
+      const tilt = Math.min(7, 20 / n);
+      cards.forEach((card, i) => {
+        const k = i - mid;
+        card.style.setProperty('--x', (k * gap).toFixed(1) + 'px');
+        card.style.setProperty('--y', (k * k * 6).toFixed(1) + 'px');
+        card.style.setProperty('--r', (k * tilt).toFixed(2) + 'deg');
+        card.style.zIndex = String(i + 1);
+      });
+    }
+    function flip(card, on) {
+      const front = card.querySelector('.kc-front');
+      const back = card.querySelector('.kc-back');
+      if (!front) return;
+      card.classList.toggle('flipped', on);
+      front.setAttribute('aria-expanded', String(on));
+      front.tabIndex = on ? -1 : 0;
+      back.tabIndex = on ? 0 : -1;
+      back.setAttribute('aria-hidden', String(!on));
+      if (on) front.setAttribute('aria-hidden', 'true');
+      else front.removeAttribute('aria-hidden');
+    }
+    function close(focusFront) {
+      if (!open) return;
+      const card = open;
+      open = null;
+      flip(card, false);
+      if (focusFront) card.querySelector('.kc-front').focus({ preventScroll: true });
+    }
+
+    cards.forEach((card) => {
+      const front = card.querySelector('.kc-front');
+      if (front) {
+        front.addEventListener('click', () => {
+          if (open && open !== card) close(false);
+          open = card;
+          flip(card, true);
+          card.querySelector('.kc-back').focus({ preventScroll: true });
+        });
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && open === card) {
+            e.stopPropagation();
+            close(true);
+          }
+        });
+      }
+      card.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.setProperty('--ry', (x * 16).toFixed(1) + 'deg');
+        card.style.setProperty('--rx', (-y * 12).toFixed(1) + 'deg');
+        card.style.setProperty('--sx', (100 - (x + 0.5) * 100).toFixed(0) + '%');
+      });
+      card.addEventListener('pointerleave', () => {
+        card.style.setProperty('--ry', '0deg');
+        card.style.setProperty('--rx', '0deg');
+      });
     });
-    track.addEventListener('keydown', (e) => {
-      const dir = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
-      if (!dir) return;
-      e.preventDefault();
-      go(active + dir);
-      const el = slides[active];
-      if (el.matches('a')) el.focus({ preventScroll: true });
-    });
-    const ro = new ResizeObserver(() => {
-      measure();
-      track.scrollLeft = centers[target ?? active] - track.clientWidth / 2;
-      render();
+    // 点牌以外的地方，翻开的牌合上
+    el.addEventListener('click', (e) => {
+      if (!e.target.closest('.kc')) close(false);
     });
 
+    const ro = new ResizeObserver(layout);
     return {
-      root,
+      el,
       start() {
-        measure();
-        setActive(0);
-        track.scrollLeft = centers[0] - track.clientWidth / 2;
-        render();
-        ro.observe(track);
+        layout();
+        ro.observe(el);
+        // 发牌：从舵轮那一侧一张张飞进来
+        if (reducedMotion()) return;
+        const [dx, dy] = from === 'left' ? [-260, 40] : [0, 220];
+        cards.forEach((card, i) =>
+          card.animate([{ transform: `translate(${dx}px, ${dy}px) rotate(${from === 'left' ? -24 : 0}deg) scale(0.6)`, opacity: 0 }, { opacity: 1, offset: 0.4 }, {}], {
+            duration: 520,
+            delay: i * 45,
+            easing: 'cubic-bezier(0.34, 1.4, 0.64, 1)',
+            fill: 'backwards',
+          })
+        );
       },
       dispose() {
         ro.disconnect();
-        clearTimeout(settleTimer);
-        cancelAnimationFrame(frame);
       },
     };
-  }
-
-  function liveSlide(info, n, cat) {
-    return h(
-      'a',
-      { class: 'hh-slide', href: info.href, style: { '--g': info.color || cat.color } },
-      h(
-        'div',
-        { class: 'hh-card' },
-        h(
-          'div',
-          { class: 'hh-screen' },
-          h('span', { class: 'hh-code' }, `${cat.id}/${String(n).padStart(2, '0')}`),
-          info.prog ? h('span', { class: 'hh-score' + (info.prog.got ? ' got' : '') }, `★ ${info.prog.got}/${info.prog.total}`) : h('span', { class: 'hh-score' }, KG.t('动画演示', 'Walkthrough')),
-          h('span', { class: 'hh-art', 'aria-hidden': 'true' }, info.icon)
-        ),
-        h(
-          'div',
-          { class: 'hh-body' },
-          h('h3', null, info.title),
-          h('p', null, info.tagline),
-          h('div', { class: 'hh-chips' }, info.concepts.slice(0, 4).map((c) => h('span', { class: 'hh-chip' }, c))),
-          h('span', { class: 'hh-go' }, KG.t('开始 →', 'Play →'))
-        )
-      )
-    );
-  }
-
-  function soonSlide(item, n, cat) {
-    return h(
-      'div',
-      { class: 'hh-slide soon', style: { '--g': cat.color } },
-      h(
-        'div',
-        { class: 'hh-card' },
-        h(
-          'div',
-          { class: 'hh-screen' },
-          h('span', { class: 'hh-code' }, `${cat.id}/${String(n).padStart(2, '0')}`),
-          h('span', { class: 'hh-score' }, KG.t('🔒 即将开放', '🔒 Coming soon')),
-          h('span', { class: 'hh-art', 'aria-hidden': 'true' }, item.icon)
-        ),
-        h(
-          'div',
-          { class: 'hh-body' },
-          h('h3', null, KG.loc(item, 'title')),
-          h('p', null, KG.loc(item, 'tagline')),
-          h('div', { class: 'hh-chips' }, item.concepts.slice(0, 4).map((c) => h('span', { class: 'hh-chip' }, c))),
-          h('span', { class: 'hh-go' }, KG.t('建设中', 'In the works'))
-        )
-      )
-    );
   }
 
   // ---------------------------------------------------------------- 大厅
@@ -433,21 +341,22 @@
     const total = sumProgress(CATEGORIES.flatMap((c) => c.entries.map(entryInfo)));
 
     // 舵轮
-    const { svg, spokes } = wheelArt();
+    const { spin, rim, hl } = wheelArt();
     const knobs = CATEGORIES.map((c, i) =>
       h(
         'button',
         { class: 'hh-knob', role: 'tab', id: 'hh-tab-' + c.id, 'aria-controls': 'hh-panel', 'aria-selected': 'false', tabindex: '-1', style: { '--c': c.color }, onclick: () => turnTo(i) },
-        h('span', { class: 'hh-medal', 'aria-hidden': 'true' }, c.icon),
+        h('span', { class: 'hh-ball' }, KG.icon(c.glyph)),
         h('span', { class: 'hh-nameplate' }, KG.loc(c, 'title'))
       )
     );
     const tablist = h('div', { class: 'hh-knobs', role: 'tablist', 'aria-label': KG.t('大类', 'Topics') }, knobs);
-    // 轮心的黄铜盖不跟着转，高光才不会乱跑
     const hub = h('div', { class: 'hh-hub' }, h('span', { class: 'sr-only' }, KG.t('全部星星', 'Total stars')), h('span', { class: 'hh-hub-got' }, '★ ' + total.got), h('span', { class: 'hh-hub-total' }, '/ ' + total.total));
-    // 指针固定在"选中"的方位（手机在正上方，宽屏在正右方，指向卡片）
+    // 指针固定在"选中"的方位（手机在正上方，宽屏在正右方，指向卡牌）
     const pointer = h('div', { class: 'hh-pointer', 'aria-hidden': 'true' });
-    const wheel = h('div', { class: 'hh-wheel' }, svg, hub, pointer, tablist);
+    // 换大类时从轮心发出一圈声呐波
+    const ping = h('div', { class: 'hh-ping', 'aria-hidden': 'true' });
+    const wheel = h('div', { class: 'hh-wheel' }, h('div', { class: 'hh-sonar', 'aria-hidden': 'true' }), ping, spin, rim, hub, pointer, tablist);
     const helm = h('div', { class: 'hh-helm' }, wheel);
 
     const panel = h('section', { class: 'hh-panel', id: 'hh-panel', role: 'tabpanel' });
@@ -464,13 +373,13 @@
           'div',
           { class: 'hh-brand' },
           // 左上角的舵轮图标回到 nphunter 主页
-          h('a', { class: 'hh-logo', href: 'https://nphunter.gg/', title: KG.t('返回 NPHunter 主页', 'Back to NPHunter'), 'aria-label': KG.t('返回 NPHunter 主页', 'Back to NPHunter') }, h('span', { 'aria-hidden': 'true' }, '⎈')),
-          h('div', null, h('h1', null, KG.siteTitle()), h('p', null, KG.t('用小游戏理解 Kubernetes。Kubernetes 在希腊语里就是"舵手"。', 'Learn Kubernetes through mini-games. "Kubernetes" is Greek for helmsman.')))
+          h('a', { class: 'hh-logo', href: 'https://nphunter.gg/', title: KG.t('返回 NPHunter 主页', 'Back to NPHunter'), 'aria-label': KG.t('返回 NPHunter 主页', 'Back to NPHunter') }, logoMark()),
+          h('div', null, h('h1', null, KG.siteTitle()), h('p', null, KG.t('用小游戏理解 Kubernetes', 'Learn Kubernetes by playing')))
         ),
         h(
           'div',
           { class: 'hh-tools' },
-          h('p', { class: 'hh-hint' }, h('span', { class: 'hh-hint-wide' }, KG.t('拖动舵轮、滚动滚轮或按 ← → 切换大类', 'Drag the wheel, scroll on it, or press ← → to switch topics')), h('span', { class: 'hh-hint-narrow' }, KG.t('拖动舵轮切换大类', 'Drag the wheel to switch topics'))),
+          h('p', { class: 'hh-hint' }, h('span', { class: 'hh-hint-wide' }, KG.t('拖动舵轮或按 ← → 切换', 'Drag the wheel or press ← →')), h('span', { class: 'hh-hint-narrow' }, KG.t('拖动舵轮切换', 'Drag the wheel to switch'))),
           h(
             'select',
             {
@@ -515,17 +424,13 @@
     );
     app.appendChild(root);
 
-    // ---------------------------------------------------------- 面板
-    let deck = null;
+    // ---------------------------------------------------------- 面板：大类名 + 星数 + 一手牌
+    let hand = null;
     function renderPanel(dir) {
       const c = CATEGORIES[cur];
-      const infos = c.entries.map(entryInfo).filter(Boolean);
-      const prog = sumProgress(infos);
-      const slides = [...infos.map((x, i) => liveSlide(x, i + 1, c)), ...c.soon.map((x, i) => soonSlide(x, infos.length + i + 1, c))];
-      if (deck) deck.dispose();
-      deck = carousel(slides);
-      const games = KG.t(`${infos.length} 个游戏`, infos.length === 1 ? '1 game' : `${infos.length} games`);
-      const meta = [infos.length ? games : KG.t('还没有上线的游戏', 'No games yet'), c.soon.length ? KG.t(`${c.soon.length} 个即将开放`, `${c.soon.length} coming soon`) : null, prog.total ? `★ ${prog.got} / ${prog.total}` : null].filter(Boolean);
+      const prog = sumProgress(c.entries.map(entryInfo).filter(Boolean));
+      if (hand) hand.dispose();
+      hand = deck(c, A === 90 ? 'left' : 'below');
       panel.style.setProperty('--dir', dir);
       panel.setAttribute('aria-labelledby', 'hh-tab-' + c.id);
       KG.fill(
@@ -533,18 +438,18 @@
         h(
           'div',
           { class: 'hh-cat' },
-          h('div', { class: 'hh-kicker mono' }, `${String(cur + 1).padStart(2, '0')} / ${String(N).padStart(2, '0')}` + KG.t(` · ${c.en.title}`, '')),
-          h('h2', null, h('span', { class: 'hh-cat-icon', 'aria-hidden': 'true' }, c.icon), KG.loc(c, 'title')),
-          h('p', { class: 'hh-cat-tag' }, KG.loc(c, 'tagline')),
-          h('p', { class: 'hh-cat-meta' }, meta.join(' · '))
+          h('h2', null, h('span', { class: 'hh-cat-icon' }, KG.icon(c.glyph)), KG.loc(c, 'title')),
+          prog.total ? h('span', { class: 'hh-cat-stars', title: KG.t('本类星数', 'Stars in this topic') }, `★ ${prog.got} / ${prog.total}`) : null,
+          h('p', { class: 'sr-only' }, KG.loc(c, 'tagline'))
         ),
-        deck.root
+        hand.el
       );
-      deck.start();
+      hand.start();
     }
 
+    let pinged = false;
     function select(i, dir, announce) {
-      if (i === cur && deck) return;
+      if (i === cur && hand) return;
       cur = i;
       const c = CATEGORIES[i];
       knobs.forEach((k, j) => {
@@ -555,6 +460,12 @@
       KG.store.set('hub:cat', c.id);
       if (location.hash !== '#/c/' + c.id) history.replaceState(null, '', '#/c/' + c.id);
       renderPanel(dir);
+      if (pinged) {
+        ping.classList.remove('go');
+        void ping.offsetWidth;
+        ping.classList.add('go');
+      }
+      pinged = true;
       if (announce) status.textContent = KG.t(`${c.title}（${i + 1}/${N}）`, `${c.en.title} (${i + 1}/${N})`);
     }
 
@@ -573,7 +484,7 @@
     let onIdx = -1;
 
     function paint() {
-      svg.style.transform = `rotate(${angle.toFixed(2)}deg)`;
+      spin.style.transform = `rotate(${angle.toFixed(2)}deg)`;
       const R = wd * 0.46;
       const plate = wd * 0.125;
       knobs.forEach((k, i) => {
@@ -583,16 +494,16 @@
         k.style.transform = `translate(${(R * sin).toFixed(1)}px, ${(-R * cos).toFixed(1)}px)`;
         k.style.setProperty('--px', (-plate * sin).toFixed(1) + 'px');
         k.style.setProperty('--py', (plate * cos).toFixed(1) + 'px');
+        // 辐条朝光的那一侧亮：右侧法线是 (cos, sin)
+        const lit = cos * LIGHT[0] + sin * LIGHT[1];
+        hl[i][1].style.opacity = Math.max(0, lit).toFixed(2);
+        hl[i][0].style.opacity = Math.max(0, -lit).toFixed(2);
       });
       const t = mod(Math.round((A - angle) / STEP));
       if (t !== onIdx) {
-        if (onIdx >= 0) {
-          knobs[onIdx].classList.remove('is-on');
-          spokes[onIdx].classList.remove('on');
-        }
+        if (onIdx >= 0) knobs[onIdx].classList.remove('is-on');
         onIdx = t;
         knobs[t].classList.add('is-on');
-        spokes[t].classList.add('on');
       }
       scene.pan(angle);
     }
@@ -749,7 +660,7 @@
     const onKey = (e) => {
       const dir = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
       if (!dir || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
-      if (e.target.closest && e.target.closest('input, select, textarea, [contenteditable], .hh-track')) return;
+      if (e.target.closest && e.target.closest('input, select, textarea, [contenteditable]')) return;
       if (document.querySelector('.modal-overlay')) return;
       e.preventDefault();
       step(dir);
@@ -774,7 +685,7 @@
     select(cur, 0, false);
     target = A - cur * STEP;
     if (!introDone && !reducedMotion()) {
-      // 第一次打开时舵轮从左边转进来
+      // 第一次打开时舵轮转进来
       angle = target - 150;
       stiff = 34;
       paint();
@@ -788,7 +699,7 @@
     return () => {
       stopAnim();
       ro.disconnect();
-      if (deck) deck.dispose();
+      if (hand) hand.dispose();
       document.removeEventListener('keydown', onKey);
       delete document.documentElement.dataset.view;
     };

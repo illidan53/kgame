@@ -1,6 +1,6 @@
-/* ================================================================ 大厅：航海舵轮
-   浅色系统是白天的海，深色系统是黄昏的海；颜色都在 .hh 的变量里。
-   --cat 是当前大类的颜色，注册成 <color> 以便过渡。 */
+/* ================================================================ 大厅：黏土舵轮 + 海图 + 卡牌
+   浅色系统是纸质航海图，深色系统是声呐屏；颜色都在 .hh 的变量里。
+   --cat 是当前大类的颜色，注册成 <color> 以便过渡；舵轮的黏土色 --clay-* 全部由它推出。 */
 @property --cat {
   syntax: '<color>';
   inherits: true;
@@ -11,14 +11,14 @@
   color-scheme: light;
 }
 :root[data-view='hub'] body {
-  background: #1d67a2;
+  background: #f1e6cc;
 }
 @media (prefers-color-scheme: dark) {
   :root[data-view='hub'] {
     color-scheme: dark;
   }
   :root[data-view='hub'] body {
-    background: #333862;
+    background: #061529;
   }
 }
 
@@ -35,55 +35,30 @@
 }
 
 .hh {
-  /* 指针方位（度，从正上方顺时针）和海平线高度；宽屏时改成正右方 */
+  /* 指针方位（度，从正上方顺时针）；宽屏时改成正右方 */
   --active: 0;
-  --horizon: 44%;
   --gutter: clamp(16px, 4vw, 48px);
 
-  /* 白天：天、海、景物 */
-  --sky-0: #62b1e6;
-  --sky-1: #8fcbf0;
-  --sky-2: #cde8f8;
-  --sky-3: #eef8fd;
-  --sun: #fffbe8;
-  --sun-glow: #fff1a8;
-  --cloud: #ffffff;
-  --cloud-shade: #d3e5f2;
-  --island-far: #9fc3d9;
-  --island: #4f8a6a;
-  --rock: #6f7f86;
-  --lh: #fbfaf5;
-  --lh-band: #d9534f;
-  --lh-room: #4a5a66;
-  --lh-roof: #b8433f;
-  --lamp: #fff2a8;
-  --lamp-o: 0;
-  --hull: #6b4a2e;
-  --sail: #fffdf5;
-  --sea-0: #7cbde2;
-  --sea-1: #4a9fd0;
-  --w1: #4a9dcf;
-  --w2: #3a8cc3;
-  --w3: #2b7ab5;
-  --w4: #1d67a2;
-  --foam: rgba(255, 255, 255, 0.75);
-  --glint: #ffffff;
-  --haze: rgba(236, 247, 253, 0.75);
-  --horizon-line: rgba(255, 255, 255, 0.85);
-  --gull: #3c4d5d;
-  /* 白天：文字、玻璃、卡片 */
-  --ink: #0c2a44;
-  --soft: #1f3c57;
-  --muted: #4d677f;
-  --line: rgba(12, 50, 90, 0.16);
-  --glass: rgba(255, 255, 255, 0.72);
-  --glass-strong: rgba(255, 255, 255, 0.88);
-  --card-bg: rgba(255, 255, 255, 0.84);
-  --card-border: rgba(255, 255, 255, 0.95);
-  --card-shadow: 0 26px 50px -28px rgba(8, 40, 80, 0.6);
-  --title-a: #0b3b66;
-  --title-b: #1673b0;
-  --logo: #1673b0;
+  /* 纸质海图 */
+  --paper: #f4ecd9;
+  --chart-ink: #2c5b86;
+  --land: #e4d5ab;
+  --ink: #1d2b3f;
+  --soft: #3a4a60;
+  --muted: #66758a;
+  --line: rgba(29, 43, 63, 0.16);
+  --glass: rgba(255, 251, 242, 0.78);
+  --glass-strong: rgba(255, 251, 242, 0.94);
+  --plate: rgba(255, 252, 244, 0.96);
+  --card-paper: #fffcf5;
+  --card-ink: #1d2b3f;
+  --card-shadow: 0 16px 30px -14px rgba(60, 45, 20, 0.55);
+  --star-off: #d9d1c0;
+  --soon-a: #ebe2cd;
+  --soon-b: #ded3ba;
+  --ping: rgba(44, 91, 134, 0.6);
+  --logo: #2c5b86;
+  --wheel-shadow: rgba(60, 45, 20, 0.3);
 
   position: relative;
   min-height: 100svh;
@@ -94,50 +69,27 @@
   transition: --cat 0.6s ease;
 }
 @media (prefers-color-scheme: dark) {
-  /* 黄昏：夕阳压着海平线，海面映出暖色 */
+  /* 声呐屏 */
   .hh {
-    --sky-0: #2b2c5c;
-    --sky-1: #6a4a86;
-    --sky-2: #d9707a;
-    --sky-3: #f7b27a;
-    --sun: #ffd08e;
-    --sun-glow: #ff9a5c;
-    --cloud: #f4b9a8;
-    --cloud-shade: #a8688e;
-    --island-far: #8a6a8f;
-    --island: #3d3358;
-    --rock: #342c4c;
-    --lh: #3a3152;
-    --lh-band: #3a3152;
-    --lh-room: #ffd98a;
-    --lh-roof: #2c2640;
-    --lamp: #ffd98a;
-    --lamp-o: 0.9;
-    --hull: #2e2644;
-    --sail: #f1c5a5;
-    --sea-0: #c47a80;
-    --sea-1: #7a5a8a;
-    --w1: #7a5a86;
-    --w2: #5e4c7c;
-    --w3: #464270;
-    --w4: #333862;
-    --foam: rgba(255, 200, 170, 0.5);
-    --glint: #ffd08a;
-    --haze: rgba(250, 190, 150, 0.45);
-    --horizon-line: rgba(255, 220, 180, 0.9);
-    --gull: #2f2540;
-    --ink: #fff4ea;
-    --soft: #f3dcd2;
-    --muted: #d7b8bd;
-    --line: rgba(255, 230, 210, 0.25);
-    --glass: rgba(44, 30, 64, 0.55);
-    --glass-strong: rgba(44, 30, 64, 0.75);
-    --card-bg: rgba(38, 28, 58, 0.74);
-    --card-border: rgba(255, 220, 200, 0.22);
-    --card-shadow: 0 26px 50px -28px rgba(10, 0, 20, 0.85);
-    --title-a: #fff1e0;
-    --title-b: #ffc9a8;
-    --logo: #ffd08a;
+    --paper: #071a30;
+    --chart-ink: #3ee0cf;
+    --land: rgba(62, 224, 207, 0.12);
+    --ink: #e3f3f4;
+    --soft: #b5cfd5;
+    --muted: #84a0aa;
+    --line: rgba(160, 225, 230, 0.2);
+    --glass: rgba(8, 28, 48, 0.72);
+    --glass-strong: rgba(10, 34, 58, 0.92);
+    --plate: rgba(8, 28, 48, 0.94);
+    --card-paper: #0f2740;
+    --card-ink: #e3f3f4;
+    --card-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.75);
+    --star-off: #3a5368;
+    --soon-a: #17334f;
+    --soon-b: #112a44;
+    --ping: rgba(62, 224, 207, 0.75);
+    --logo: #3ee0cf;
+    --wheel-shadow: rgba(0, 0, 0, 0.55);
   }
 }
 .hh > :not(.hh-sky, .sr-only) {
@@ -145,213 +97,111 @@
   z-index: 1;
 }
 
-/* ---------------------------------------------------------------- 海天
-   hub-scene.js 生成各层；远景、云、波光、浪头随转舵横移，浪本身还会一直漂和起伏 */
+/* ---------------------------------------------------------------- 海图
+   hub-scene.js 生成等深线；海图四周多留 90px，转舵时在里面漂移 */
 .hh-sky {
   position: fixed;
   inset: 0;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background: linear-gradient(180deg, var(--sky-0) 0%, var(--sky-1) calc(var(--horizon) * 0.45), var(--sky-2) calc(var(--horizon) * 0.85), var(--sky-3) var(--horizon));
+  background: radial-gradient(120% 90% at 50% 45%, #f9f3e4 0%, #f2e7cd 65%, #e5d4ae 100%);
 }
-.hh-clouds-wrap,
-.hh-far-wrap {
+.hh-grain {
   position: absolute;
-  left: 0;
+  inset: 0;
+  opacity: 0.55;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .36 0 0 0 0 .2 0 0 0 .32 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
 }
-.hh-clouds-wrap {
-  top: calc(var(--horizon) * 0.1);
-}
-.hh-far-wrap {
-  top: calc(var(--horizon) - 200px);
-}
-.hh-clouds,
-.hh-far {
-  display: block;
-  overflow: visible;
+.hh-chart {
+  position: absolute;
+  top: -90px;
+  left: -90px;
+  width: calc(100% + 180px);
+  height: calc(100% + 180px);
   will-change: transform;
 }
-.hh-cloud {
-  fill: var(--cloud);
-  opacity: 0.95;
+.hh-c-grid,
+.hh-c-rhumb,
+.hh-c-depth,
+.hh-c-rose circle,
+.hh-c-rose path {
+  fill: none;
+  stroke: var(--chart-ink);
+  vector-effect: non-scaling-stroke;
 }
-.hh-cloud-shade {
-  fill: var(--cloud-shade);
-}
-.hh-sun {
-  transform: translate(260px, 64px);
-}
-.hh-sun-glow {
-  fill: var(--sun-glow);
-}
-.hh-sun-disc {
-  fill: var(--sun);
-}
-.hh-island-far {
-  fill: var(--island-far);
-}
-.hh-island {
-  fill: var(--island);
-}
-.hh-rock {
-  fill: var(--rock);
-}
-.hh-lh-tower {
-  fill: var(--lh);
-}
-.hh-lh-band {
-  fill: var(--lh-band);
-}
-.hh-lh-room {
-  fill: var(--lh-room);
-}
-.hh-lh-roof {
-  fill: var(--lh-roof);
-}
-.hh-lamp {
-  fill: var(--lamp);
-  opacity: calc(var(--lamp-o) * 0.45);
-}
-.hh-hull {
-  fill: var(--hull);
-}
-.hh-mast {
-  stroke: var(--hull);
+.hh-c-grid {
+  stroke-opacity: 0.12;
   stroke-width: 1;
 }
-.hh-sail {
-  fill: var(--sail);
+.hh-c-rhumb {
+  stroke-opacity: 0.1;
+  stroke-width: 1;
+  stroke-dasharray: 6 6;
 }
-.hh-boat {
-  transform-box: fill-box;
-  transform-origin: 50% 100%;
-  animation: hh-rock 4s ease-in-out infinite alternate;
+.hh-c-depth {
+  stroke-opacity: 0.3;
+  stroke-width: 0.8;
 }
-.hh-sea {
+.hh-c-depth.idx {
+  stroke-opacity: 0.5;
+  stroke-width: 1.4;
+}
+.hh-c-land {
+  fill: var(--land);
+}
+.hh-c-label {
+  font: italic 22px Georgia, 'Times New Roman', serif;
+  fill: var(--chart-ink);
+  fill-opacity: 0.65;
+  paint-order: stroke;
+  stroke: var(--paper);
+  stroke-width: 6px;
+}
+.hh-c-rose circle,
+.hh-c-rose path {
+  stroke-opacity: 0.45;
+  stroke-width: 1.2;
+}
+.hh-c-rose path.fill {
+  fill: var(--chart-ink);
+  fill-opacity: 0.35;
+}
+.hh-c-rose text {
+  font: 600 26px Georgia, 'Times New Roman', serif;
+  fill: var(--chart-ink);
+  fill-opacity: 0.6;
+  text-anchor: middle;
+}
+/* 当前大类的"海域"：卡牌后面一片大类色的光 */
+.hh-glow {
   position: absolute;
-  left: 0;
-  right: 0;
-  top: var(--horizon);
-  bottom: 0;
-  overflow: hidden;
-  background: linear-gradient(180deg, var(--sea-0), var(--sea-1) 30%, var(--w4));
+  inset: 0;
+  background: radial-gradient(42% 46% at var(--gx, 50%) var(--gy, 34%), color-mix(in srgb, var(--cat) 26%, transparent), transparent 72%);
 }
-.hh-sea::before {
-  content: '';
+.hh-vignette {
   position: absolute;
-  inset: 0 0 auto;
-  z-index: 5;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--horizon-line) 20%, var(--horizon-line) 80%, transparent);
-}
-.hh-wave {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -12px;
-  animation: hh-bob var(--bob) ease-in-out infinite alternate;
-}
-.hh-wave:nth-child(1) {
-  --w: var(--w1);
-}
-.hh-wave:nth-child(2) {
-  --w: var(--w2);
-}
-.hh-wave:nth-child(3) {
-  --w: var(--w3);
-}
-.hh-wave:nth-child(4) {
-  --w: var(--w4);
-}
-.hh-wave::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(var(--band) - 1px);
-  bottom: 0;
-  background: var(--w);
-}
-.hh-wave-pan {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: var(--band);
-  will-change: transform;
-}
-.hh-wave svg {
-  display: block;
-  animation: hh-drift var(--drift) linear infinite;
-}
-.hh-wave-body {
-  fill: var(--w);
-}
-.hh-wave-foam {
-  fill: none;
-  stroke: var(--foam);
-  stroke-width: 1.6;
-}
-.hh-glitter {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 4;
-  will-change: transform;
-}
-.hh-glitter-svg {
-  display: block;
-  height: 100%;
-}
-.hh-glitter line {
-  stroke: var(--glint);
-  stroke-linecap: round;
-}
-.hh-glint-a {
-  animation: hh-twinkle 1.7s ease-in-out infinite alternate;
-}
-.hh-glint-b {
-  animation: hh-twinkle 1.3s ease-in-out -0.7s infinite alternate;
-}
-.hh-haze {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(var(--horizon) - 34px);
-  height: 52px;
-  background: linear-gradient(180deg, transparent, var(--haze) 62%, transparent);
-}
-.hh-gull {
-  position: absolute;
-  top: 15%;
-  left: 0;
-  color: var(--gull);
-  animation: hh-fly 38s linear -6s infinite;
-}
-.hh-gull.g2 {
-  top: 23%;
-  animation-duration: 53s;
-  animation-delay: -31s;
-}
-.hh-gull svg {
-  display: block;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  animation: hh-flap 0.55s ease-in-out infinite alternate;
-}
-.hh-gull.g2 svg {
-  width: 16px;
-  animation-duration: 0.7s;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(120, 90, 40, 0.22) 100%);
 }
 @media (prefers-color-scheme: dark) {
-  .hh-sun {
-    transform: translate(260px, 178px) scale(1.55);
+  .hh-sky {
+    background: radial-gradient(120% 90% at 35% 55%, #0f3354 0%, #0a2440 45%, #061529 100%);
   }
-  .hh-glitter {
-    mix-blend-mode: screen;
+  .hh-grain {
+    opacity: 1;
+    mix-blend-mode: normal;
+    background: repeating-linear-gradient(0deg, rgba(62, 224, 207, 0.035) 0 1px, transparent 1px 3px);
+  }
+  .hh-chart {
+    filter: drop-shadow(0 0 3px rgba(62, 224, 207, 0.45));
+  }
+  .hh-glow {
+    background: radial-gradient(42% 46% at var(--gx, 50%) var(--gy, 34%), color-mix(in srgb, var(--cat) 20%, transparent), transparent 72%);
+  }
+  .hh-vignette {
+    background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.5) 100%);
   }
 }
 
@@ -372,29 +222,27 @@
 .hh-logo {
   display: inline-grid;
   place-items: center;
-  font-size: 40px;
-  line-height: 1;
   color: var(--logo);
   border-radius: 50%;
-  transition: transform 0.4s cubic-bezier(0.3, 1.4, 0.5, 1), color 0.2s;
+  transition: transform 0.4s cubic-bezier(0.3, 1.4, 0.5, 1);
 }
 /* 舵轮图标是回 nphunter 主页的链接：悬停时转一下 */
 .hh-logo:hover {
-  color: var(--title-a);
   transform: rotate(-40deg);
 }
 .hh-logo:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 3px;
 }
+.hh-logo-mark svg {
+  display: block;
+  width: 38px;
+  height: 38px;
+}
 .hh-brand h1 {
   margin: 0;
   font-size: clamp(22px, 2.4vw, 28px);
   letter-spacing: 0.02em;
-  background: linear-gradient(100deg, var(--title-a), var(--title-b));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
 }
 .hh-brand p {
   margin: 0;
@@ -430,8 +278,6 @@
   border: 1px solid var(--line);
   border-radius: 999px;
   background: var(--glass);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
 }
 .hh-hint-narrow {
   display: none;
@@ -446,8 +292,8 @@
 }
 
 /* ---------------------------------------------------------------- 布局
-   窄屏：卡片在上，舵轮在下只露出上面大半个，像站在舵台后面；
-   宽屏（≥ 960px）：舵轮完整地放在左栏，指针朝右指向卡片。 */
+   窄屏：卡牌在上，舵轮在下只露出上面大半个；
+   宽屏（≥ 960px）：舵轮完整地放在左栏，指针朝右指向卡牌。 */
 .hh-main {
   flex: 1;
   display: flex;
@@ -473,6 +319,12 @@
 .hh-wheel {
   --wd: clamp(280px, min(94cqw, 100cqh / 0.76), 600px);
   --kd: max(42px, calc(var(--wd) * 0.1));
+  /* 黏土色：都从 --cat 推出 */
+  --clay: color-mix(in oklab, var(--cat) 52%, white);
+  --clay-hi: color-mix(in oklab, var(--cat) 20%, white);
+  --clay-lo: color-mix(in oklab, var(--cat) 80%, #31405e);
+  --clay-deep: color-mix(in oklab, var(--cat) 60%, #1f2a44);
+  --clay-ink: color-mix(in oklab, var(--cat) 38%, #13213a);
   position: absolute;
   top: calc(24px + var(--wd) * 0.045);
   left: 50%;
@@ -487,7 +339,10 @@
 @media (min-width: 960px) {
   .hh {
     --active: 90;
-    --horizon: 50%;
+  }
+  .hh-glow {
+    --gx: 68%;
+    --gy: 52%;
   }
   .hh-main {
     display: grid;
@@ -514,41 +369,49 @@
     touch-action: none;
   }
   .hh-panel {
-    padding-bottom: 12px;
+    padding: 0 var(--gutter) 24px 0;
   }
 }
 
-/* ---------------------------------------------------------------- 大类标题 */
+/* ---------------------------------------------------------------- 大类标题：只有名字和星数 */
 .hh-cat {
-  padding: 12px 16px 0;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  padding: 10px 16px 0;
   animation: hh-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-.hh-kicker {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--cat) 60%, var(--ink));
 }
 .hh-cat h2 {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  margin: 2px 0 4px;
-  font-size: clamp(24px, 3vw, 32px);
+  gap: 12px;
+  margin: 0;
+  font-size: clamp(24px, 2.6vw, 32px);
 }
-.hh-cat-tag {
-  max-width: 640px;
-  margin: 0 auto;
-  font-size: 14.5px;
+.hh-cat-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, color-mix(in oklab, var(--cat) 22%, white), color-mix(in oklab, var(--cat) 58%, white) 52%, color-mix(in oklab, var(--cat) 85%, #31405e));
+  box-shadow: 2px 4px 8px -2px rgba(20, 30, 60, 0.35), inset -2px -3px 5px rgba(0, 0, 0, 0.12), inset 2px 2px 4px rgba(255, 255, 255, 0.65);
+  color: color-mix(in oklab, var(--cat) 38%, #13213a);
+}
+.hh-cat-icon .kg-icon {
+  width: 56%;
+  height: 56%;
+}
+.hh-cat-stars {
+  padding: 3px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--glass-strong);
+  font-size: 13px;
+  font-weight: 700;
   color: var(--soft);
-  text-wrap: balance;
-}
-.hh-cat-meta {
-  margin: 4px 0 0;
-  font-size: 12.5px;
-  color: var(--muted);
 }
 @keyframes hh-in {
   from {
@@ -557,314 +420,267 @@
   }
 }
 
-/* ---------------------------------------------------------------- 游戏卡片轮动
-   横向 scroll-snap；hub.js 设置每张卡的 --focus / --shift。动效放在 .hh-card 上，
-   因为 scroll-snap 量的是 .hh-slide 变换前的盒子。 */
-.hh-carousel {
-  --slide: clamp(252px, 26vw, 312px);
-  --track-pad: 30px;
-  animation: hh-in 0.5s 0.04s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-@media (min-width: 960px) {
-  .hh-carousel {
-    --slide: clamp(260px, 22vw, 320px);
-  }
-}
-.hh-track {
+/* ---------------------------------------------------------------- 卡牌：一手牌
+   hub.js 给每张牌设 --x / --y / --r 摆成扇形；悬停抬起、跟着鼠标倾斜（--rx / --ry）、反光（--sx） */
+.hh-deck {
+  --kw: clamp(140px, 11.5vw, 178px);
+  --kh: calc(var(--kw) * 1.42);
   position: relative;
-  display: flex;
-  margin-top: calc(12px - var(--track-pad));
-  padding: var(--track-pad) 0 20px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  height: calc(var(--kh) + 64px);
+  margin-top: 6px;
+  perspective: 1000px;
 }
-.hh-track::-webkit-scrollbar {
-  display: none;
+.kc {
+  --x: 0px;
+  --y: 0px;
+  --r: 0deg;
+  --rx: 0deg;
+  --ry: 0deg;
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  width: var(--kw);
+  height: var(--kh);
+  margin-left: calc(var(--kw) / -2);
+  transform: translate(var(--x), var(--y)) rotate(var(--r));
+  transform-origin: 50% 110%;
+  transition: transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
-.hh-track::before,
-.hh-track::after {
-  content: '';
-  flex: 0 0 calc(50% - var(--slide) / 2);
+.kc:hover,
+.kc:focus-within,
+.kc.flipped {
+  z-index: 30 !important;
+  transform: translate(var(--x), calc(var(--y) - 22px)) rotate(0deg) scale(1.05);
 }
-.hh-slide {
-  --focus: 0;
-  --shift: 0;
-  flex: 0 0 var(--slide);
-  display: flex;
-  padding: 0 12px;
-  color: inherit;
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-}
-.hh-card {
+.kc-flip {
   position: relative;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  border: 1px solid var(--card-border);
-  border-radius: 22px;
-  background: var(--card-bg);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  box-shadow: var(--card-shadow), 0 0 70px -34px var(--g);
-  transform: perspective(1100px) translateX(calc(var(--shift) * var(--slide) * -0.1)) rotateY(calc(var(--shift) * -26deg)) scale(calc(0.84 + 0.16 * var(--focus)));
-  opacity: calc(0.5 + 0.5 * var(--focus));
-  transition: border-color 0.25s, box-shadow 0.25s;
-  will-change: transform, opacity;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.55s cubic-bezier(0.3, 1.25, 0.5, 1);
 }
-.hh-slide.is-active:not(.soon):hover .hh-card,
-.hh-slide:focus-visible .hh-card {
-  border-color: color-mix(in srgb, var(--g) 65%, transparent);
-  box-shadow: var(--card-shadow), 0 0 90px -24px var(--g);
+.kc.flipped .kc-flip {
+  transform: rotateX(var(--rx)) rotateY(calc(var(--ry) + 180deg));
 }
-.hh-slide:focus-visible .hh-card {
-  outline: 2px solid var(--g);
-  outline-offset: 3px;
-}
-.hh-screen {
-  position: relative;
-  display: grid;
-  place-items: center;
-  height: 112px;
-  margin: 12px 12px 0;
-  overflow: hidden;
-  border-radius: 15px;
-  background: radial-gradient(90% 110% at 50% 28%, color-mix(in srgb, var(--g) 55%, white) 0%, var(--g) 42%, color-mix(in srgb, var(--g) 45%, #0a2440) 100%);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25), inset 0 -40px 60px -40px rgba(0, 0, 0, 0.35);
-}
-.hh-screen::before {
-  content: '';
+.kc-face {
   position: absolute;
   inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background: linear-gradient(115deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 32%);
+  display: flex;
+  padding: 5px;
+  border: 0;
+  border-radius: 16px;
+  /* 牌框：大类色的"箔"边 */
+  background: linear-gradient(150deg, color-mix(in oklab, var(--cat) 88%, white), color-mix(in oklab, var(--cat) 72%, #1b2a44));
+  box-shadow: var(--card-shadow);
+  color: var(--card-ink);
+  font: inherit;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
-.hh-art {
-  font-size: 54px;
-  line-height: 1;
-  filter: drop-shadow(0 10px 12px rgba(10, 30, 60, 0.35));
-  transition: transform 0.35s ease;
+.kc-face:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
 }
-.hh-slide.is-active:not(.soon):hover .hh-art {
-  transform: scale(1.08) rotate(-4deg);
+.kc-back {
+  transform: rotateY(180deg);
 }
-.hh-code {
-  position: absolute;
-  top: 10px;
-  left: 12px;
-  z-index: 3;
-  font: 600 10.5px/1 var(--mono);
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.9);
-}
-.hh-score {
-  position: absolute;
-  top: 7px;
-  right: 9px;
-  z-index: 3;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: rgba(6, 20, 40, 0.45);
-  font-size: 11.5px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.92);
-}
-.hh-score.got {
-  color: #ffd66b;
-}
-.hh-body {
+.kc-inner {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 12px 16px 16px;
-}
-.hh-body h3 {
-  margin: 0;
-  font-size: 17px;
-}
-/* 卡片内容限高：说明最多两行、概念标签最多两行，所有大类的卡片一样高，切换时舵轮不会上下跳 */
-.hh-body p {
-  display: -webkit-box;
-  min-height: 3em;
-  margin: 0;
-  overflow: hidden;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--soft);
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-}
-.hh-chips {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 5px;
-  height: 47px;
-  margin-top: 2px;
-  overflow: hidden;
-}
-.hh-chip {
-  padding: 1px 8px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--ink) 4%, transparent);
-  font-size: 11px;
-  line-height: 17px;
-  color: var(--muted);
-}
-.hh-go {
-  margin-top: auto;
-  padding-top: 6px;
-  font-size: 13.5px;
-  font-weight: 700;
-  color: color-mix(in srgb, var(--g) 62%, var(--ink));
-}
-.hh-slide.soon .hh-card {
-  border-style: dashed;
-  border-color: color-mix(in srgb, var(--ink) 30%, transparent);
-  background: var(--glass);
-  box-shadow: var(--card-shadow);
-}
-.hh-slide.soon .hh-screen {
-  background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0 10px, transparent 10px 20px), radial-gradient(90% 110% at 50% 28%, color-mix(in srgb, var(--g) 30%, #a3b1c2) 0%, color-mix(in srgb, var(--g) 12%, #5d6b7e) 90%);
-}
-.hh-slide.soon .hh-art {
-  opacity: 0.55;
-  filter: grayscale(0.7);
-}
-.hh-slide.soon .hh-go {
-  font-weight: 500;
-  color: var(--muted);
-}
-.hh-ctrl {
-  display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 14px;
-  margin-top: -4px;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--card-paper);
 }
-.hh-ctrl.single {
-  visibility: hidden;
-}
-.hh-arrow {
+/* 插画区：图标外面一圈圈等深线，和背景的海图呼应 */
+.kc-art {
+  position: relative;
+  flex: 1;
+  align-self: stretch;
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
-  padding: 0 0 2px;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: var(--glass-strong);
-  color: var(--ink);
-  font-size: 20px;
-  line-height: 1;
-  cursor: pointer;
-  transition: border-color 0.2s, opacity 0.2s;
+  background: radial-gradient(circle at 50% 46%, color-mix(in oklab, var(--cat) 16%, var(--card-paper)) 0 30%, transparent 31%),
+    repeating-radial-gradient(circle at 50% 46%, transparent 0 9px, color-mix(in oklab, var(--cat) 24%, transparent) 9px 10px),
+    color-mix(in oklab, var(--cat) 8%, var(--card-paper));
 }
-.hh-arrow:hover:not(:disabled) {
-  border-color: var(--cat);
+.kc-art .kg-icon {
+  width: 42%;
+  height: auto;
+  aspect-ratio: 1;
+  color: color-mix(in oklab, var(--cat) 60%, var(--card-ink));
+  transition: transform 0.35s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
-.hh-arrow:disabled {
-  opacity: 0.4;
+.kc:hover .kc-art .kg-icon {
+  transform: scale(1.08) rotate(-5deg);
+}
+.kc-sheen {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.6) 45%, transparent 60%);
+  background-size: 250% 100%;
+  background-position: var(--sx, 100%) 0;
+  mix-blend-mode: soft-light;
+  transition: opacity 0.3s;
+}
+.kc:hover .kc-sheen {
+  opacity: 1;
+}
+.kc-title {
+  display: block;
+  padding: 8px 8px 2px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.kc-stars {
+  padding-bottom: 9px;
+  color: #f0a815;
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+.kc-stars i {
+  font-style: normal;
+  color: var(--star-off);
+}
+.kc-demo {
+  padding-bottom: 9px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.kc-back .kc-inner {
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+}
+.kc-back .kc-title {
+  padding: 0;
+  font-size: 15px;
+}
+.kc-blurb {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--soft);
+}
+.kc-count {
+  font-size: 12px;
+  color: var(--muted);
+}
+.kc-go {
+  margin-top: 4px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--cat) 78%, #1b2a44);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+/* 未上线：背面朝上的牌 */
+.kc.soon .kc-face {
+  background: repeating-linear-gradient(45deg, color-mix(in oklab, var(--cat) 40%, var(--soon-a)) 0 8px, color-mix(in oklab, var(--cat) 14%, var(--soon-b)) 8px 16px);
   cursor: default;
 }
-.hh-dots {
-  display: flex;
-  gap: 6px;
+.kc.soon .kc-inner {
+  justify-content: center;
+  gap: 4px;
+  border: 1.5px dashed color-mix(in oklab, var(--cat) 50%, transparent);
+  background: color-mix(in srgb, var(--card-paper) 72%, transparent);
 }
-.hh-dot {
-  width: 8px;
-  height: 8px;
-  padding: 0;
-  border: 0;
-  border-radius: 999px;
-  background: var(--glass-strong);
-  box-shadow: 0 0 0 1px var(--line);
-  cursor: pointer;
-  transition: width 0.25s, background-color 0.25s;
+.kc-q {
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1;
+  color: color-mix(in oklab, var(--cat) 60%, var(--card-ink));
 }
-.hh-dot[aria-current] {
-  width: 22px;
-  background: var(--cat);
+.kc-soon {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--soft);
+}
+.kc-soon-title {
+  padding: 0 8px;
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: var(--muted);
 }
 
-/* ---------------------------------------------------------------- 舵轮：木头 + 黄铜
-   hub.js 转动 SVG，并逐帧摆放 7 个把手按钮 */
+/* ---------------------------------------------------------------- 舵轮：黏土软 3D
+   转动层是辐条和轮毂法兰；轮缘、轮心盖、把手球的光影都不转 */
 .hh-wheel.dragging {
   cursor: grabbing;
 }
-/* 投在身后的影子：一个不转的圆，只在轮缘外面画阴影 */
 .hh-wheel::before {
   content: '';
   position: absolute;
-  inset: 15.5%;
+  inset: 13%;
   border-radius: 50%;
   pointer-events: none;
-  box-shadow: 0 20px 34px -6px rgba(0, 25, 50, 0.45);
+  box-shadow: 8px 16px 34px -4px var(--wheel-shadow);
 }
-.hh-wheel-art {
+.hh-wheel-spin,
+.hh-wheel-rim {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   overflow: visible;
+}
+.hh-wheel-spin {
   will-change: transform;
 }
-.hh-wood {
-  fill: url(#hh-wood-spoke);
-}
-.hh-collar {
-  fill: #d6a84a;
-  stroke: #7a520f;
-  stroke-width: 0.2;
-}
-.hh-inlay {
-  stroke: var(--c);
-  stroke-width: 0.7;
+.hh-sp {
+  stroke: var(--clay-lo);
+  stroke-width: 5.4;
   stroke-linecap: round;
-  opacity: 0;
-  transition: opacity 0.3s;
 }
-.hh-spoke.on .hh-inlay {
-  opacity: 0.95;
+.hh-sp-hl {
+  stroke: var(--clay-hi);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+}
+.hh-flange {
+  fill: var(--clay);
+  stroke: var(--clay-lo);
+  stroke-width: 0.6;
+}
+.hh-bolt {
+  fill: var(--clay-hi);
+  stroke: var(--clay-lo);
+  stroke-width: 0.3;
 }
 .hh-rim {
-  fill: url(#hh-wood-rim);
-  stroke: #3f210b;
-  stroke-width: 0.3;
-}
-.hh-grain {
   fill: none;
-  stroke: rgba(60, 30, 10, 0.35);
-  stroke-width: 0.25;
+  stroke: url(#hh-rim-g);
+  stroke-width: 9;
 }
-.hh-band {
+.hh-wheel-rim .s0 {
+  stop-color: var(--clay-deep);
+}
+.hh-wheel-rim .s1,
+.hh-wheel-rim .s3 {
+  stop-color: var(--clay);
+}
+.hh-wheel-rim .s2 {
+  stop-color: var(--clay-hi);
+}
+.hh-rim-light {
   fill: none;
-  stroke: #d6a84a;
-  stroke-width: 0.8;
+  stroke: rgba(255, 255, 255, 0.6);
+  stroke-width: 2.4;
+  stroke-linecap: round;
 }
-.hh-cap {
-  fill: #e0b453;
-  stroke: #7a520f;
-  stroke-width: 0.3;
+.hh-rim-shade {
+  fill: none;
+  stroke: rgba(0, 0, 0, 0.14);
+  stroke-width: 2.6;
+  stroke-linecap: round;
 }
-.hh-hub-wood {
-  fill: url(#hh-wood-hub);
-  stroke: #3f210b;
-  stroke-width: 0.4;
-}
-/* 轮心的黄铜盖不转，所以高光一直在左上 */
 .hh-hub {
   position: absolute;
   top: 50%;
@@ -873,24 +689,24 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 17.5%;
+  width: 26%;
   aspect-ratio: 1;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(circle at 38% 32%, #fff6cf 0%, #e8bf5e 38%, #b3801f 78%, #7a520f 100%);
-  box-shadow: inset 0 -2px 4px rgba(80, 50, 0, 0.45), inset 0 2px 3px rgba(255, 255, 255, 0.6), 0 2px 6px rgba(40, 20, 0, 0.45);
+  background: radial-gradient(circle at 36% 30%, var(--clay-hi) 0%, var(--clay) 55%, var(--clay-lo) 100%);
+  box-shadow: inset -3px -4px 8px rgba(0, 0, 0, 0.12), inset 3px 3px 6px rgba(255, 255, 255, 0.5), 3px 6px 12px -2px rgba(20, 30, 60, 0.3);
+  color: var(--clay-ink);
   line-height: 1.1;
   pointer-events: none;
 }
 .hh-hub-got {
-  font-size: clamp(13px, calc(var(--wd) * 0.034), 20px);
+  font-size: clamp(13px, calc(var(--wd) * 0.036), 21px);
   font-weight: 800;
-  color: #4a2d05;
 }
 .hh-hub-total {
-  font-size: clamp(10px, calc(var(--wd) * 0.021), 12px);
+  font-size: clamp(10px, calc(var(--wd) * 0.022), 12px);
   font-weight: 600;
-  color: #6b4a14;
+  opacity: 0.8;
 }
 .hh-pointer {
   position: absolute;
@@ -908,9 +724,67 @@
   left: -9px;
   width: 18px;
   height: 14px;
-  background: var(--cat);
+  background: var(--clay-lo);
   clip-path: polygon(0 0, 100% 0, 50% 100%);
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.35));
+}
+/* 换大类时从轮心发出的一圈波 */
+.hh-ping {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 76%;
+  aspect-ratio: 1;
+  border: 2px solid var(--ping);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.55);
+  pointer-events: none;
+}
+.hh-ping.go {
+  animation: hh-ping 1.1s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+@keyframes hh-ping {
+  from {
+    opacity: 0.9;
+    transform: translate(-50%, -50%) scale(0.55);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.9);
+  }
+}
+/* 声呐屏上舵轮周围的距离圈和扫描线，只在深色出现 */
+.hh-sonar {
+  display: none;
+}
+@media (prefers-color-scheme: dark) {
+  .hh-sonar {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 170%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: repeating-radial-gradient(circle, transparent 0 calc(var(--wd) * 0.14 - 1px), rgba(62, 224, 207, 0.16) calc(var(--wd) * 0.14 - 1px) calc(var(--wd) * 0.14));
+    -webkit-mask-image: radial-gradient(circle, #000 35%, transparent 70%);
+    mask-image: radial-gradient(circle, #000 35%, transparent 70%);
+    pointer-events: none;
+  }
+  .hh-sonar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, rgba(62, 224, 207, 0.13), transparent 50deg);
+    animation: hh-sweep 7s linear infinite;
+  }
+}
+@keyframes hh-sweep {
+  to {
+    transform: rotate(360deg);
+  }
 }
 .hh-knobs {
   position: absolute;
@@ -935,54 +809,58 @@
 .hh-knob:focus-visible {
   outline: none;
 }
-/* 把手末端：黄铜圈里嵌着象牙色的徽章 */
-.hh-medal {
+/* 把手：每个大类一个黏土小球，里面是线性图标 */
+.hh-ball {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
-  border: 3px solid #d6a84a;
   border-radius: 50%;
-  background: radial-gradient(circle at 36% 30%, #fffdf6, #f3e7cc 62%, #d9c498);
-  box-shadow: 0 5px 12px -4px rgba(40, 20, 0, 0.55), inset 0 -2px 3px rgba(120, 80, 20, 0.25);
-  font-size: calc(var(--kd) * 0.44);
-  transition: transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1), box-shadow 0.3s, border-color 0.3s;
+  background: radial-gradient(circle at 35% 30%, color-mix(in oklab, var(--c) 22%, white) 0%, color-mix(in oklab, var(--c) 58%, white) 50%, color-mix(in oklab, var(--c) 85%, #31405e) 100%);
+  box-shadow: 2px 4px 8px -1px rgba(20, 30, 60, 0.35), inset -2px -3px 5px rgba(0, 0, 0, 0.12), inset 2px 2px 4px rgba(255, 255, 255, 0.65);
+  color: color-mix(in oklab, var(--c) 38%, #13213a);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
 }
-.hh-knob:hover .hh-medal {
-  border-color: #f0c860;
+.hh-ball .kg-icon {
+  width: 50%;
+  height: 50%;
 }
-.hh-knob.is-on .hh-medal {
-  transform: scale(1.2);
-  border-color: var(--c);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 40%, transparent), 0 0 26px 4px color-mix(in srgb, var(--c) 65%, transparent), 0 5px 12px -4px rgba(40, 20, 0, 0.55);
+.hh-knob:hover .hh-ball {
+  transform: scale(1.08);
 }
-.hh-knob:focus-visible .hh-medal {
+.hh-knob.is-on .hh-ball {
+  transform: scale(1.22);
+  box-shadow: 0 0 0 3px var(--plate), 0 0 0 5.5px var(--c), 0 0 22px 2px color-mix(in srgb, var(--c) 55%, transparent), 2px 4px 8px -1px rgba(20, 30, 60, 0.35), inset -2px -3px 5px rgba(0, 0, 0, 0.12), inset 2px 2px 4px rgba(255, 255, 255, 0.65);
+}
+.hh-knob:active .hh-ball {
+  transform: scale(0.94);
+}
+.hh-knob:focus-visible .hh-ball {
   outline: 2px solid var(--ink);
-  outline-offset: 5px;
+  outline-offset: 6px;
 }
-/* 名牌钉在木轮缘上：黄铜铭牌 */
 .hh-nameplate {
   position: absolute;
   top: 50%;
   left: 50%;
   padding: 1px 8px;
-  border: 1px solid #8a6220;
-  border-radius: 5px;
-  background: linear-gradient(180deg, #f6dc8e, #d4a444);
-  box-shadow: 0 1px 2px rgba(40, 20, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.55);
-  color: #3f2606;
-  font-size: 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--plate);
+  box-shadow: 0 2px 4px -1px rgba(20, 30, 60, 0.25);
+  color: var(--ink);
+  font-size: 11.5px;
   font-weight: 700;
-  letter-spacing: 0.02em;
   white-space: nowrap;
   transform: translate(-50%, -50%) translate(var(--px, 0), var(--py, 0));
-  transition: box-shadow 0.3s;
+  transition: background-color 0.3s, border-color 0.3s;
 }
 .hh-knob.is-on .hh-nameplate {
-  box-shadow: 0 0 0 2px var(--c), 0 1px 2px rgba(40, 20, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  border-color: color-mix(in oklab, var(--c) 60%, transparent);
+  background: color-mix(in oklab, var(--c) 30%, var(--plate));
 }
 
-/* ---------------------------------------------------------------- 页脚（在海面上，用浅色字） */
+/* ---------------------------------------------------------------- 页脚 */
 .hh-foot {
   display: flex;
   justify-content: center;
@@ -990,76 +868,19 @@
   gap: 12px;
   padding: 4px 16px 20px;
   font-size: 12.5px;
-  color: rgba(255, 255, 255, 0.92);
-  text-shadow: 0 1px 2px rgba(0, 20, 40, 0.5);
+  color: var(--muted);
 }
 .hh-reset {
   padding: 4px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.16);
-  color: #fff;
+  background: var(--glass);
+  color: var(--soft);
   font-size: 12px;
-  text-shadow: none;
   cursor: pointer;
 }
 .hh-reset:hover {
-  background: rgba(255, 255, 255, 0.28);
-}
-
-@keyframes hh-drift {
-  to {
-    transform: translateX(calc(var(--tile) * -1));
-  }
-}
-@keyframes hh-bob {
-  to {
-    transform: translateY(3px);
-  }
-}
-@keyframes hh-twinkle {
-  from {
-    opacity: 0.25;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes hh-rock {
-  from {
-    transform: rotate(-2.5deg);
-  }
-  to {
-    transform: rotate(2.5deg) translateY(1px);
-  }
-}
-@keyframes hh-fly {
-  from {
-    transform: translate3d(-40px, 0, 0);
-  }
-  50% {
-    transform: translate3d(50vw, -18px, 0);
-  }
-  to {
-    transform: translate3d(calc(100vw + 40px), 6px, 0);
-  }
-}
-@keyframes hh-flap {
-  to {
-    transform: scaleY(0.45);
-  }
-}
-
-@media (max-height: 820px) {
-  .hh-screen {
-    height: 84px;
-  }
-  .hh-art {
-    font-size: 44px;
-  }
-  .hh-track {
-    padding-bottom: 14px;
-  }
+  color: var(--ink);
 }
 
 @media (max-width: 640px) {
@@ -1070,8 +891,9 @@
   .hh-brand {
     gap: 10px;
   }
-  .hh-logo {
-    font-size: 30px;
+  .hh-logo-mark svg {
+    width: 30px;
+    height: 30px;
   }
   .hh-brand p {
     font-size: 12px;
@@ -1080,45 +902,33 @@
     padding: 2px 10px;
     font-size: 11.5px;
   }
-  .hh-cat {
-    padding-top: 6px;
-  }
   .hh-cat h2 {
     font-size: 24px;
   }
-  .hh-cat-tag {
-    min-height: 3.1em;
-    font-size: 13.5px;
+  .hh-deck {
+    --kw: min(31vw, 132px);
+    height: calc(var(--kh) + 48px);
   }
-  .hh-carousel {
-    --slide: min(76vw, 290px);
+  .kc {
+    bottom: 22px;
   }
-  .hh-screen {
-    height: 80px;
-  }
-  .hh-art {
-    font-size: 40px;
-  }
-  .hh-body {
-    padding: 10px 14px 14px;
+  .kc-title {
+    font-size: 13px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hh,
-  .hh-medal {
+  .hh-ball,
+  .kc,
+  .kc-flip {
     transition: none;
   }
-  .hh-wave,
-  .hh-wave svg,
-  .hh-glint-a,
-  .hh-glint-b,
-  .hh-boat,
   .hh-cat,
-  .hh-carousel {
+  .hh-sonar::after {
     animation: none;
   }
-  .hh-gull {
+  .hh-ping {
     display: none;
   }
 }

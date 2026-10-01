@@ -526,11 +526,14 @@
   KG.register({
     id: GAME,
     icon: '💥',
+    glyph: 'gauge',
     color: '#f472b6',
     title: 'OOM 求生记',
     tagline: '调 request / limit，让服务撑过一整天',
     concepts: ['request vs limit', 'QoS 等级', 'OOMKilled', 'CrashLoopBackOff', 'kubelet 驱逐', '内核 OOM Killer', 'CPU 节流'],
+    blurb: '调好 request 和 limit，撑过一整天',
     en: {
+      blurb: 'Tune requests and limits to last the day',
       title: 'OOM Survival',
       tagline: 'Tune requests and limits so your service survives a whole day',
       concepts: ['request vs limit', 'QoS classes', 'OOMKilled', 'CrashLoopBackOff', 'kubelet eviction', 'kernel OOM killer', 'CPU throttling'],
